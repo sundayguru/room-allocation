@@ -19,11 +19,19 @@ class TestRoom(unittest.TestCase):
 		office_space = Room('Rock','O')
 		self.assertEqual(office_space.capacity, 6)
 
-	def test_room_allocate(self):
+	def test_room_allocate_fellow(self):
 		room = Room('Iroko','L')
 		person = Person('Sunday','FELLOW',True)
 		room.allocate(person)
 		self.assertNotEqual(room.beds, [])
+		self.assertEqual(type(person), type(room.beds[0]))
+
+	def test_room_allocate_staff(self):
+		room = Room('Iroko','O')
+		person = Person('Nandaa','STAFF')
+		room.allocate(person)
+		self.assertNotEqual(room.beds, [])
+		self.assertEqual(person, room.beds[0])
 
 
 	"""Edge cases for init method"""
@@ -40,6 +48,31 @@ class TestRoom(unittest.TestCase):
 		self.assertRaises(ValueError, Room, 'Iroko', 'P')
 
 
+	"""Edge cases for allocate method"""
+	def test_room_allocate_fails_when_person_living_space_is_false(self):
+		room = Room('Iroko','L')
+		person = Person('Sunday','FELLOW')
+		self.assertEqual(room.allocate(person), False)
+		self.assertEqual(room.beds, [])
+		
+	def test_room_allocate_fails_when_person_type_is_fellow_and_room_type_is_O(self):
+		room = Room('Iroko','O')
+		person = Person('Sunday','FELLOW',True)
+		self.assertEqual(room.allocate(person), False)
+		self.assertEqual(room.beds, [])
+		
+	def test_room_allocate_fails_when_person_type_is_staff_and_room_type_is_L(self):
+		room = Room('Iroko','L')
+		person = Person('Nandaa','STAFF',True)
+		self.assertEqual(room.allocate(person), False)
+		self.assertEqual(room.beds, [])
+		
+	def test_room_allocate_only_person_instance(self):
+		room = Room('Iroko','O')
+		person = {}
+		self.assertEqual(room.allocate(person), False)
+		self.assertEqual(room.beds, [])
+		
 
 
 if __name__ == '__main__':
