@@ -18,7 +18,18 @@ class TestRoom(unittest.TestCase):
 		office_space = Room('Rock','O')
 		self.assertEqual(office_space.capacity, 6)
 
+	"""Edge cases for init method"""
+	def test_room_init_accept_only_string(self):
+		self.assertRaises(ValueError, Room, 1, 2)
 
+	def test_room_init_accept_only_string_for_name(self):
+		self.assertRaises(ValueError, Room, 1, 'L')
+
+	def test_room_init_accept_only_string_for_type(self):
+		self.assertRaises(ValueError, Room, 'Iroko', 2)
+
+	def test_room_init_accept_only_L_or_T_for_type(self):
+		self.assertRaises(ValueError, Room, 'Iroko', 'P')
 
 
 
