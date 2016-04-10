@@ -1,7 +1,7 @@
 class Room(object):
 	""" room allocation """
 	capacity = 4
-	beds = {}
+	beds = []
 	is_filled = False
 
 	def __init__(self,name,room_type):
@@ -19,6 +19,6 @@ class Room(object):
 		if self.room_type == 'O':
 			self.capacity = 6
 
-	def allocate(person):
+	def allocate(self,person):
 		pass
 

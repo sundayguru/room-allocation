@@ -2,6 +2,7 @@ import unittest
 from os import sys, path
 sys.path.append(path.dirname(path.dirname(path.abspath(__file__))))
 from src.room import Room
+from src.person import Person
 
 class TestRoom(unittest.TestCase):
 	"""Test cases for Room"""
@@ -18,6 +19,13 @@ class TestRoom(unittest.TestCase):
 		office_space = Room('Rock','O')
 		self.assertEqual(office_space.capacity, 6)
 
+	def test_room_allocate(self):
+		room = Room('Iroko','L')
+		person = Person('Sunday','FELLOW',True)
+		room.allocate(person)
+		self.assertNotEqual(room.beds, [])
+
+
 	"""Edge cases for init method"""
 	def test_room_init_accept_only_string(self):
 		self.assertRaises(ValueError, Room, 1, 2)
@@ -30,6 +38,7 @@ class TestRoom(unittest.TestCase):
 
 	def test_room_init_accept_only_L_or_T_for_type(self):
 		self.assertRaises(ValueError, Room, 'Iroko', 'P')
+
 
 
 
