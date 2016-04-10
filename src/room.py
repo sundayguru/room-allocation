@@ -20,5 +20,5 @@ class Room(object):
 			self.capacity = 6
 
 	def allocate(self,person):
-		pass
+		self.beds.append(person)
 
