@@ -34,6 +34,13 @@ class TestRoom(unittest.TestCase):
 		self.assertEqual(type(person), type(room.beds[0]))
 
 
+	def test_room_allocate_fails_when_is_filled(self):
+		room = Room('Iroko','O')
+		name = 'Nandaa'
+		person = Person(name,'STAFF')
+		room.is_filled = True
+		self.assertEqual(room.allocate(persons),False)
+
 	"""Edge cases for init method"""
 	def test_room_init_accept_only_string(self):
 		self.assertRaises(ValueError, Room, 1, 2)
