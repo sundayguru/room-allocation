@@ -31,7 +31,7 @@ class TestRoom(unittest.TestCase):
 		person = Person('Nandaa','STAFF')
 		room.allocate(person)
 		self.assertNotEqual(room.beds, [])
-		self.assertEqual(person, room.beds[0])
+		self.assertEqual(type(person), type(room.beds[0]))
 
 
 	"""Edge cases for init method"""
@@ -70,8 +70,7 @@ class TestRoom(unittest.TestCase):
 	def test_room_allocate_only_person_instance(self):
 		room = Room('Iroko','O')
 		person = {}
-		self.assertEqual(room.allocate(person), False)
-		self.assertEqual(room.beds, [])
+		self.assertRaises(ValueError, room.allocate, person)
 		
 
 
