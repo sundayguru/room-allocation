@@ -27,6 +27,9 @@ class Room(object):
 		if not self.allocateAble(person):
 			return False
 
+		if self.is_filled == True:
+			return False
+			
 		self.beds.append(person)
 		return True
 

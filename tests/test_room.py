@@ -39,7 +39,7 @@ class TestRoom(unittest.TestCase):
 		name = 'Nandaa'
 		person = Person(name,'STAFF')
 		room.is_filled = True
-		self.assertEqual(room.allocate(persons),False)
+		self.assertEqual(room.allocate(person),False)
 
 	"""Edge cases for init method"""
 	def test_room_init_accept_only_string(self):
