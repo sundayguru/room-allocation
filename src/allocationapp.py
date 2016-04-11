@@ -35,6 +35,16 @@ class AllocationApp(object):
 		self.populateRooms()
 		self.loadPeople()
 
+	def startapp(self):
+		Util.welcome()
+		name = Util.prompt('Your name: ')
+		while len(name) == 0:
+			Util.printline('name is required to use this application')
+			name = Util.prompt('Your name: ')
+		else:
+			self.name = name
+			
+		Util.showstarttips()
 
 	def populateRooms(self):
 		"""populates rooms"""
@@ -44,7 +54,7 @@ class AllocationApp(object):
 
 
 	def loadPeople(self):
-		path = '../data/people.txt'
+		path = 'data/people.txt'
 		if not Util.isfile(path):
 			Util.printline('you do not have people.txt in the data folder')
 			return False
@@ -84,7 +94,7 @@ class AllocationApp(object):
 			if allocated == True:
 				if room.people == []:
 					continue
-					
+
 			print room.nameplate()
 			if len(room.people) > 0 :
 				for person in room.people:
@@ -93,7 +103,21 @@ class AllocationApp(object):
 			else:
 				Util.printline('not allocated')
 
+	def roomlistpeople(self, room_name):
+		found = False
+		for room in self.rooms:
+			if room.name.lower() != room_name.lower():
+				continue
 
+			print room.nameplate()
+			if len(room.people) > 0 :
+				for person in room.people:
+					print person.name + ', ',
+				print '\n'
+			else:
+				Util.printline('not allocated')
+			found = True
 
-app = AllocationApp('sunday')
-app.listallocation(True)
+		if found == False:
+			Util.printline('Oops, we are unable to locate a room called ' + room_name)
+
