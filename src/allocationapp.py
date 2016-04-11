@@ -43,8 +43,10 @@ class AllocationApp(object):
 			name = Util.prompt('Your name: ')
 		else:
 			self.name = name
-			
+
 		Util.showstarttips()
+		command = Util.starttipscommandlistener()
+		print command
 
 	def populateRooms(self):
 		"""populates rooms"""

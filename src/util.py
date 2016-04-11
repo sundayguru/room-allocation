@@ -16,7 +16,17 @@ class Util(object):
 	@staticmethod
 	def prompt(message):
 		return raw_input(message)
-		
+
+	@staticmethod
+	def starttipscommandlistener():
+		command = Util.prompt('Enter Command: ')
+		while len(command) == 0:
+			Util.printline('Invalid Command')
+			Util.showstarttips()
+			command = Util.prompt('Enter Command: ')
+		else:
+			return command.lower()
+
 	@staticmethod
 	def printdivider():
 		print '---------------------------------------------------------------------------'
