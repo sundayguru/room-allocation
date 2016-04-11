@@ -29,7 +29,7 @@ class Room(object):
 
 		if(len(self.beds) == self.capacity):
 			self.is_filled = True
-			
+
 		if self.is_filled == True:
 			return False
 			

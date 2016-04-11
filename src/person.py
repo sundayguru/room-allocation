@@ -12,3 +12,19 @@ class Person(object):
 		self.name = name
 		self.person_type = person_type
 		self.living_space = living_space
+
+
+	def fulldetails(self):
+		return self.name + ' ' + self.person_type + ' ' + self.livingspace() + ' ' + self.isallocated()
+
+	def livingspace(self):
+		if self.living_space:
+			return 'YES'
+		else:
+			return 'NO'
+
+	def isallocated(self):
+		if self.is_allocated:
+			return 'YES'
+		else:
+			return 'NO'

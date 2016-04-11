@@ -61,7 +61,8 @@ class AllocationApp(object):
 
 				person = Person(name,person_type,living_space)
 				self.people.append(person)
-				self.allocatePerson(person)
+				if self.allocatePerson(person):
+					person.is_allocated = True
 
 	def allocatePerson(self,person):
 		for room in self.rooms:
@@ -70,9 +71,9 @@ class AllocationApp(object):
 					return room.allocate(person)
 
 	def listpeople(self):
+		Util.printline('Name          Type    Living Space     Allocated')
 		for person in self.people:
-			records =  person.name,person.person_type,person.living_space
-			print records
+			Util.printline(person.fulldetails())
 
 
 app = AllocationApp('sunday')
