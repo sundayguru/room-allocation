@@ -70,11 +70,30 @@ class AllocationApp(object):
 				if room.is_filled == False:
 					return room.allocate(person)
 
-	def listpeople(self):
+	def listpeople(self,allocated = None):
 		Util.printline('Name          Type    Living Space     Allocated')
 		for person in self.people:
-			Util.printline(person.fulldetails())
+			if allocated == None:
+				Util.printline(person.fulldetails())
+			else:
+				if person.is_allocated == allocated:
+					Util.printline(person.fulldetails())
+
+	def listallocation(self,allocated = None):
+		for room in self.rooms:
+			if allocated == True:
+				if room.people == []:
+					continue
+					
+			print room.nameplate()
+			if len(room.people) > 0 :
+				for person in room.people:
+					print person.name + ', ',
+				print '\n'
+			else:
+				Util.printline('not allocated')
+
 
 
 app = AllocationApp('sunday')
-app.listpeople()
+app.listallocation(True)

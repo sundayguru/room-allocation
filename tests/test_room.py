@@ -23,15 +23,15 @@ class TestRoom(unittest.TestCase):
 		room = Room('Iroko','L')
 		person = Person('Sunday','FELLOW',True)
 		room.allocate(person)
-		self.assertNotEqual(room.beds, [])
-		self.assertEqual(type(person), type(room.beds[0]))
+		self.assertNotEqual(room.people, [])
+		self.assertEqual(type(person), type(room.people[0]))
 
 	def test_room_allocate_staff(self):
 		room = Room('Iroko','O')
 		person = Person('Nandaa','STAFF')
 		room.allocate(person)
-		self.assertNotEqual(room.beds, [])
-		self.assertEqual(type(person), type(room.beds[0]))
+		self.assertNotEqual(room.people, [])
+		self.assertEqual(type(person), type(room.people[0]))
 
 
 	def test_room_allocate_fails_when_is_filled(self):
@@ -60,19 +60,19 @@ class TestRoom(unittest.TestCase):
 		room = Room('Iroko','L')
 		person = Person('Sunday','FELLOW')
 		self.assertEqual(room.allocate(person), False)
-		self.assertEqual(room.beds, [])
+		self.assertEqual(room.people, [])
 		
 	def test_room_allocate_fails_when_person_type_is_fellow_and_room_type_is_O(self):
 		room = Room('Iroko','O')
 		person = Person('Sunday','FELLOW',True)
 		self.assertEqual(room.allocate(person), False)
-		self.assertEqual(room.beds, [])
+		self.assertEqual(room.people, [])
 		
 	def test_room_allocate_fails_when_person_type_is_staff_and_room_type_is_L(self):
 		room = Room('Iroko','L')
 		person = Person('Nandaa','STAFF',True)
 		self.assertEqual(room.allocate(person), False)
-		self.assertEqual(room.beds, [])
+		self.assertEqual(room.people, [])
 		
 	def test_room_allocate_only_person_instance(self):
 		room = Room('Iroko','O')
