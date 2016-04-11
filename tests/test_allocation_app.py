@@ -19,6 +19,10 @@ class TestAllocationApp(unittest.TestCase):
 		self.assertNotEqual(self.app.people, [])
 		self.assertEqual(type(self.app.people[0]), Person)
 
+	def test_app_init_allocates_fellow_with_living_space_true(self):
+		self.assertNotEqual(self.app.rooms[0].beds, [])
+		self.assertEqual(type(self.app.rooms[0].beds[0]), Person)
+
 
 if __name__ == '__main__':
     unittest.main()
