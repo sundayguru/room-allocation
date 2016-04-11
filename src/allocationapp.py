@@ -1,5 +1,5 @@
-from src.person import Person
-from src.room import Room
+from person import Person
+from room import Room
 
 class AllocationApp(object):
 	"""This is the entry point of the application"""
@@ -32,6 +32,7 @@ class AllocationApp(object):
 	def __init__(self,name):
 		self.name = name
 		self.populateRooms()
+		self.loadPeople()
 
 
 	def populateRooms(self):
@@ -42,7 +43,21 @@ class AllocationApp(object):
 
 
 	def loadPeople(self):
-		pass
+		with open('../data/people.txt','r') as file:
+			for line in file:
+				records = line.split()
+				living_space = False
+				name = records[0] + ' ' + records[1]
+				person_type = records[2]
+				if person_type == 'FELLOW':
+					if(records[3] == 'Y'):
+						living_space = True
+
+				person = Person(name,person_type,living_space)
+				self.people.append(person)
 
 	def allocatePeople(self):
 		pass
+
+
+

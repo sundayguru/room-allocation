@@ -8,10 +8,16 @@ from src.allocationapp import AllocationApp
 class TestAllocationApp(unittest.TestCase):
 	"""Test cases for AllocationApp"""
 
+	def setUp(self):
+		self.app = AllocationApp('Sunday')
+
 	def test_app_init_populates_rooms(self):
-		app = AllocationApp('Sunday')
-		self.assertEqual(len(app.rooms), 20)
-		self.assertEqual(type(app.rooms[0]), Room)
+		self.assertNotEqual(self.app.rooms, [])
+		self.assertEqual(type(self.app.rooms[0]), Room)
+
+	def test_app_init_loads_people_from_file(self):
+		self.assertNotEqual(self.app.people, [])
+		self.assertEqual(type(self.app.people[0]), Person)
 
 
 if __name__ == '__main__':
