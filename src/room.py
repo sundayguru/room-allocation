@@ -27,6 +27,9 @@ class Room(object):
 		if not self.allocateAble(person):
 			return False
 
+		if(len(self.beds) == self.capacity):
+			self.is_filled = True
+			
 		if self.is_filled == True:
 			return False
 			

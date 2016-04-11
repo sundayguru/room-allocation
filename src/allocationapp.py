@@ -1,5 +1,6 @@
 from person import Person
 from room import Room
+from util import Util
 
 class AllocationApp(object):
 	"""This is the entry point of the application"""
@@ -43,7 +44,12 @@ class AllocationApp(object):
 
 
 	def loadPeople(self):
-		with open('../data/people.txt','r') as file:
+		path = '../data/people.txt'
+		if not Util.isfile(path):
+			Util.printline('you do not have people.txt in the data folder')
+			return False
+
+		with open(path,'r') as file:
 			for line in file:
 				records = line.split()
 				living_space = False
@@ -55,9 +61,19 @@ class AllocationApp(object):
 
 				person = Person(name,person_type,living_space)
 				self.people.append(person)
+				self.allocatePerson(person)
 
-	def allocatePeople(self):
-		pass
+	def allocatePerson(self,person):
+		for room in self.rooms:
+			if room.room_type == 'L':
+				if room.is_filled == False:
+					return room.allocate(person)
+
+	def listpeople(self):
+		for person in self.people:
+			records =  person.name,person.person_type,person.living_space
+			print records
 
 
-
+app = AllocationApp('sunday')
+app.listpeople()
