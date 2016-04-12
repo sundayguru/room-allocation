@@ -2,6 +2,7 @@ import os.path
 
 class Util(object):
 
+
 	@staticmethod
 	def isfile(file_path):
 		return os.path.isfile(file_path) 
@@ -25,7 +26,7 @@ class Util(object):
 			Util.showstarttips()
 			command = Util.prompt('Enter Command: ')
 		else:
-			return command.lower()
+			return command.upper()
 
 	@staticmethod
 	def printdivider():
@@ -51,5 +52,6 @@ class Util(object):
 		Util.printdivider()
 		Util.printdivider()
 		print '                     WELCOME TO ALLOCATION APP                               '
+		print '           One stop solution for room allocation management                  '
 		Util.printdivider()
 		Util.printdivider()

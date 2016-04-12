@@ -27,6 +27,11 @@ class AllocationApp(object):
 	{'name':'Cherry','type':'O'},
 	{'name':'Elm','type':'O'}
 	]
+	commands = {
+	'LP':{'method':'listpeople','param_type':bool},
+	'LP -A':{'method':'listpeople','param_type':bool},
+	'Q':{'method':'exit','param_type':None},
+	}
 	rooms = [] #this will hold all available rooms
 	people = [] #this will hold all available person
 
@@ -36,6 +41,7 @@ class AllocationApp(object):
 		self.loadPeople()
 
 	def startapp(self):
+		"""this will kick start the application"""
 		Util.welcome()
 		name = Util.prompt('Your name: ')
 		while len(name) == 0:
@@ -45,8 +51,33 @@ class AllocationApp(object):
 			self.name = name
 
 		Util.showstarttips()
+		self.getcommand()
+
+
+	def getcommand(self):
+		"""prompt for user input and run the command issued"""
 		command = Util.starttipscommandlistener()
-		print command
+		self.runcommand(command)
+
+	def runcommand(self,command):
+		"""resolve inputs from prompt and execute the right method"""
+		args = command.split()
+		if(len(args) != 0):
+			if(args[0] in self.commands):
+				command_params = self.commands[args[0]]
+				method = getattr(self,command_params['method'])
+				method()
+				
+				if(args[0] != 'Q'):
+					self.getcommand()
+			else:
+				Util.printline('Invalid command')
+				self.getcommand()
+		else:
+			"""edge case, this may not happen"""
+			Util.printline('Unknown Input error')
+			self.getcommand()
+
 
 	def populateRooms(self):
 		"""populates rooms"""
@@ -122,4 +153,15 @@ class AllocationApp(object):
 
 		if found == False:
 			Util.printline('Oops, we are unable to locate a room called ' + room_name)
+
+	def exit(self):
+		Util.printdivider()
+		print '                     THANK YOU FOR USING OUR SOLUTION                        '
+		rating = Util.prompt('Rate This app (scale of 1 to 10):')
+		with open('data/rating.txt','r+') as file:
+			file.read()
+			data = 'Rating from ' + self.name + ': ' + rating + '\n'
+			file.write(data)
+
+		Util.printdivider()
 
