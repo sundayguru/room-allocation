@@ -2,3 +2,6 @@ Rating from snsd: 4
 Rating from ssds: 9
 Rating from moday: 8
 Rating from sun: 8
+Rating from sund: 5
+Rating from sun: 4
+Rating from sunday: 5

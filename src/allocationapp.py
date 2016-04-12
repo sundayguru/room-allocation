@@ -66,8 +66,22 @@ class AllocationApp(object):
 			if(args[0] in self.commands):
 				command_params = self.commands[args[0]]
 				method = getattr(self,command_params['method'])
-				method()
-				
+				try:
+					param = args[1]
+					if command_params['param_type'] == bool:
+						if param == '-A':
+							param = True
+						elif param == '-U':
+							param = False
+						else:
+							Util.printline('Invalid parameter ('+param+') for command type ('+args[0]+')')
+							self.getcommand()
+							return False
+
+					method(param)
+				except:
+					method()
+					
 				if(args[0] != 'Q'):
 					self.getcommand()
 			else:
