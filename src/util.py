@@ -1,4 +1,6 @@
+import os
 import os.path
+
 
 class Util(object):
 
@@ -17,6 +19,10 @@ class Util(object):
 	@staticmethod
 	def prompt(message):
 		return raw_input(message)
+
+	@staticmethod
+	def clearscreen():
+		os.system('clear')
 
 	@staticmethod
 	def starttipscommandlistener():

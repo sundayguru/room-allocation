@@ -5,3 +5,4 @@ Rating from sun: 8
 Rating from sund: 5
 Rating from sun: 4
 Rating from sunday: 5
+Rating from sunday: 4

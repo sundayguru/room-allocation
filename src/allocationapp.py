@@ -61,6 +61,7 @@ class AllocationApp(object):
 
 	def runcommand(self,command):
 		"""resolve inputs from prompt and execute the right method"""
+		Util.clearscreen()
 		args = command.split()
 		if(len(args) != 0):
 			if(args[0] in self.commands):
