@@ -13,6 +13,11 @@ class Util(object):
 	def printline(message):
 		Util.printdivider()
 		print message
+
+	@staticmethod
+	def printtwoline(message):
+		Util.printdivider()
+		print message
 		Util.printdivider()
 
 
@@ -23,6 +28,7 @@ class Util(object):
 	@staticmethod
 	def clearscreen():
 		os.system('clear')
+		Util.welcome()
 
 	@staticmethod
 	def starttipscommandlistener():
@@ -41,6 +47,7 @@ class Util(object):
 	@staticmethod
 	def showstarttips():
 		Util.printline('INSTRUCTIONS');
+		Util.printdivider()
 		print 'COMMAND           DESCRIPTION'
 		print 'LP          List all people'
 		print 'LP -A       List all allocated people'
@@ -51,6 +58,7 @@ class Util(object):
 		print 'AP          Add people'
 		print 'AR          Add Room'
 		print 'I           Show this instructions again'
+		print 'Q           Quit Application'
 		Util.printdivider()
 
 	@staticmethod

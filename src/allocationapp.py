@@ -29,7 +29,7 @@ class AllocationApp(object):
 	]
 	commands = {
 	'LP':{'method':'listpeople','param_type':bool},
-	'LP -A':{'method':'listpeople','param_type':bool},
+	'LR':{'method':'listallocation','param_type':bool},
 	'Q':{'method':'exit','param_type':None},
 	}
 	rooms = [] #this will hold all available rooms
@@ -42,7 +42,7 @@ class AllocationApp(object):
 
 	def startapp(self):
 		"""this will kick start the application"""
-		Util.welcome()
+		Util.clearscreen()
 		name = Util.prompt('Your name: ')
 		while len(name) == 0:
 			Util.printline('name is required to use this application')
@@ -75,7 +75,7 @@ class AllocationApp(object):
 						elif param == '-U':
 							param = False
 						else:
-							Util.printline('Invalid parameter ('+param+') for command type ('+args[0]+')')
+							Util.printtwoline('Invalid parameter ('+param+') for command type ('+args[0]+')')
 							self.getcommand()
 							return False
 
@@ -86,11 +86,11 @@ class AllocationApp(object):
 				if(args[0] != 'Q'):
 					self.getcommand()
 			else:
-				Util.printline('Invalid command')
+				Util.printtwoline('Invalid command type ('+command+')')
 				self.getcommand()
 		else:
 			"""edge case, this may not happen"""
-			Util.printline('Unknown Input error')
+			Util.printtwoline('Unknown Input error')
 			self.getcommand()
 
 
@@ -129,13 +129,14 @@ class AllocationApp(object):
 					return room.allocate(person)
 
 	def listpeople(self,allocated = None):
-		Util.printline('Name          Type    Living Space     Allocated')
+		Util.printline('Name   -> Type   -> Living Space  -> Allocated')
 		for person in self.people:
 			if allocated == None:
 				Util.printline(person.fulldetails())
 			else:
 				if person.is_allocated == allocated:
 					Util.printline(person.fulldetails())
+		Util.printdivider()
 
 	def listallocation(self,allocated = None):
 		for room in self.rooms:
