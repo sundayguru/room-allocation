@@ -30,6 +30,7 @@ class AllocationApp(object):
 	commands = {
 	'LP':{'method':'listpeople','param_type':bool},
 	'LR':{'method':'listallocation','param_type':bool},
+	'I':{'method':'commandtips','param_type':None},
 	'Q':{'method':'exit','param_type':None},
 	}
 	rooms = [] #this will hold all available rooms
@@ -50,7 +51,7 @@ class AllocationApp(object):
 		else:
 			self.name = name
 
-		Util.showstarttips()
+		self.commandtips()
 		self.getcommand()
 
 
@@ -150,7 +151,7 @@ class AllocationApp(object):
 					print person.name + ', ',
 				print '\n'
 			else:
-				Util.printline('not allocated')
+				Util.printtwoline('not allocated')
 
 	def roomlistpeople(self, room_name):
 		found = False
@@ -180,4 +181,7 @@ class AllocationApp(object):
 			file.write(data)
 
 		Util.printdivider()
+
+	def commandtips(self):
+		Util.showstarttips()
 
