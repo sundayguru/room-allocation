@@ -4,7 +4,7 @@ class Migration(Db):
 	"""docstring for Migration"""
 	table_definitions = [
 	'''CREATE TABLE fellow
-       (ID INT PRIMARY KEY     NOT NULL,
+       (ID INT PRIMARY KEY,
        firstname         CHAR(255),
        lastname         CHAR(255),
        allocation       INT    NOT NULL,
@@ -12,14 +12,14 @@ class Migration(Db):
     ''',
 
     '''CREATE TABLE staff
-       (ID INT PRIMARY KEY     NOT NULL,
+       (ID INT PRIMARY KEY,
        firstname         CHAR(255),
        lastname         CHAR(255),
        date_time         CHAR(25));
     ''',
 
     '''CREATE TABLE room
-       (ID INT PRIMARY KEY     NOT NULL,
+       (ID INT PRIMARY KEY,
        name           CHAR(255),
        capacity       INT     NOT NULL,
        type           CHAR(25),
@@ -28,14 +28,14 @@ class Migration(Db):
     ''',
 
     '''CREATE TABLE fellow_allocation
-       (ID INT PRIMARY KEY     NOT NULL,
+       (ID INT PRIMARY KEY,
        fellow_id       INT     NOT NULL,
        room_id       INT     NOT NULL,
        date_time         CHAR(25));
     ''',
 
     '''CREATE TABLE staff_allocation
-       (ID INT PRIMARY KEY     NOT NULL,
+       (ID INT PRIMARY KEY,
        staff_id       INT     NOT NULL,
        room_id       INT     NOT NULL,
        date_time         CHAR(25));

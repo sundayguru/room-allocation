@@ -1,20 +1,30 @@
 import sqlite3
+from os import path
 
 class Db(object):
 	"""Database manipulation"""
+
 	name = 'amity'
 	table_name = 'table_name'
+	errormessage = ''
 
 	def __init__(self,dbname = 'amity',table_name = 'table_name'):
 		self.name = dbname
 		self.table_name = table_name
-		self.connection = sqlite3.connect(self.name+'.db')
+		root = path.dirname(path.dirname(path.abspath(__file__)))
+		db_location = root+'/'+self.name+'.db'
+		self.connection = sqlite3.connect(db_location)
 
 
-	def execute(self,sql):
+	def execute(self,sql,commit = False):
+		"""executes sql and return the query result if successful or bool if failed"""
 		try:
-			return self.connection.execute(sql)
-		except:
+			result =  self.connection.execute(sql)
+			if commit:
+				self.connection.commit()
+			return result
+		except sqlite3.OperationalError, message:
+			self.errormessage = message
 			return False
 
 	def find(self,id):
@@ -34,13 +44,13 @@ class Db(object):
 
 	def create(self,data):
 		resolved = self.prepare(data)
-		sql = 'INSERT INTO '+self.table_name+' ('+resolved['column']+') VALUES (1,'+resolved['value']+')'
-		return self.execute(sql)
+		sql = 'INSERT INTO '+self.table_name+' ('+resolved['column']+') VALUES ('+resolved['value']+')'
+		return self.execute(sql,True)
 		
       
 
 	def prepare(self,data):
-		columns = 'id,'
+		columns = ''
 		values = ''
 		columnvalue = {}
 		for key,value in data.items():
