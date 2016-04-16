@@ -4,7 +4,7 @@ class Migration(Db):
 	"""docstring for Migration"""
 	table_definitions = [
 	'''CREATE TABLE fellow
-       (ID INT PRIMARY KEY,
+       (id INTEGER PRIMARY KEY AUTOINCREMENT,
        firstname         CHAR(255),
        lastname         CHAR(255),
        allocation       INT    NOT NULL,
@@ -12,14 +12,14 @@ class Migration(Db):
     ''',
 
     '''CREATE TABLE staff
-       (ID INT PRIMARY KEY,
+       (id INTEGER PRIMARY KEY AUTOINCREMENT,
        firstname         CHAR(255),
        lastname         CHAR(255),
        date_time         CHAR(25));
     ''',
 
     '''CREATE TABLE room
-       (ID INT PRIMARY KEY,
+       (id INTEGER PRIMARY KEY AUTOINCREMENT,
        name           CHAR(255),
        capacity       INT     NOT NULL,
        type           CHAR(25),
@@ -28,14 +28,14 @@ class Migration(Db):
     ''',
 
     '''CREATE TABLE fellow_allocation
-       (ID INT PRIMARY KEY,
+       (id INTEGER PRIMARY KEY AUTOINCREMENT,
        fellow_id       INT     NOT NULL,
        room_id       INT     NOT NULL,
        date_time         CHAR(25));
     ''',
 
     '''CREATE TABLE staff_allocation
-       (ID INT PRIMARY KEY,
+       (id INTEGER PRIMARY KEY AUTOINCREMENT,
        staff_id       INT     NOT NULL,
        room_id       INT     NOT NULL,
        date_time         CHAR(25));
@@ -44,8 +44,8 @@ class Migration(Db):
 
 	tables = ['fellow','staff','room','fellow_allocation','staff_allocation']
 
-	def __init__(self):
-		super(Migration,self).__init__()
+	def __init__(self,dbname = 'amity'):
+		super(Migration,self).__init__(dbname)
 
 		
 
@@ -68,5 +68,5 @@ class Migration(Db):
 			except:
 				print table+' does not exist'
 
-m = Migration()
+m = Migration('amity_test')
 m.install()

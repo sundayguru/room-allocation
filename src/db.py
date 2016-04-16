@@ -1,5 +1,6 @@
 import sqlite3
 from os import path
+from datetime import datetime
 
 class Db(object):
 	"""Database manipulation"""
@@ -14,12 +15,14 @@ class Db(object):
 		root = path.dirname(path.dirname(path.abspath(__file__)))
 		db_location = root+'/'+self.name+'.db'
 		self.connection = sqlite3.connect(db_location)
+		#this will allow us to access the query result via the column name
+		self.connection.row_factory = sqlite3.Row
 
 
-	def execute(self,sql,commit = False):
+	def execute(self, sql, params = {}, commit = False):
 		"""executes sql and return the query result if successful or bool if failed"""
 		try:
-			result =  self.connection.execute(sql)
+			result =  self.connection.execute(sql,params)
 			if commit:
 				self.connection.commit()
 			return result
@@ -28,36 +31,39 @@ class Db(object):
 			return False
 
 	def find(self,id):
-		try:
-			return self.execute("SELECT *  from "+table_name+' WHERE id = '+id)
-		except:
+		result =  self.execute("SELECT *  from " + self.table_name + ' WHERE id = ' + str(id))
+		if result:
+			return result.fetchone()[0]
+		else:
 			return False
 
 	def findall(self):
-		try:
-			return self.execute("SELECT *  from "+table_name)
-		except:
+		result = self.execute("SELECT *  from " + self.table_name)
+		if result:
+			return result.fetchall()
+		else:
 			return False
 
 	def findbyattr(self,attributes):
 		pass
 
 	def create(self,data):
+		data['date_time'] = datetime.now()
 		resolved = self.prepare(data)
-		sql = 'INSERT INTO '+self.table_name+' ('+resolved['column']+') VALUES ('+resolved['value']+')'
-		return self.execute(sql,True)
+		sql = 'INSERT INTO '+self.table_name+' ('+resolved['column']+') VALUES ('+resolved['place_holders']+')'
+		return self.execute(sql,data,True)
 		
       
 
 	def prepare(self,data):
 		columns = ''
-		values = ''
+		place_holders = '';
 		columnvalue = {}
 		for key,value in data.items():
 			columns += key + ','
-			values += "'" + str(value) + "',"
+			place_holders += ":" + str(key) + ","
 		columnvalue['column'] = columns[:-1]
-		columnvalue['value'] = values[:-1]
+		columnvalue['place_holders'] = place_holders[:-1]
 		return columnvalue
 
 	def update(self,data):
