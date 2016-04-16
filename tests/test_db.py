@@ -10,21 +10,18 @@ class TestDb(unittest.TestCase):
 	def setUp(self):
 		self.db = Db('amity_test')
 
-	def test_db_init_opens_connection(self):
-		self.assertEqual(type(self.db.connection), sqlite3.Connection)
-
 	def test_db_find_returns_false_when_invalid_table(self):
 		data = self.db.find(1)
 		self.assertEqual(data, False)
 
 
-	def test_db_prepare(self):
+	def test_db_prepareinsert(self):
 		data = {
 		'firstname':'sunday',
 		'lastname':'Nwuguru',
 		'allocation':1
 		}
-		res = self.db.prepare(data)
+		res = self.db.prepareinsert(data)
 		self.assertEqual(res, {'column': 'allocation,lastname,firstname', 'place_holders':':allocation,:lastname,:firstname'})
 
 
@@ -46,11 +43,21 @@ class TestDb(unittest.TestCase):
 		}
 		self.db.table_name = 'fellow'
 		self.db.create(data)
+		res = self.db.find(1)
+		self.assertEqual(self.db.errormessage, '')
+		self.assertEqual(res['firstname'], 'sunday')
+
+	def test_db_findall(self):
+		data = {
+		'firstname':'sunday',
+		'lastname':'Nwuguru',
+		'allocation':1
+		}
+		self.db.table_name = 'fellow'
+		self.db.create(data)
 		res = self.db.findall()
 		self.assertEqual(self.db.errormessage, '')
-		for i in res:
-			print i
-		#self.assertEqual(res[0][0], 'sunday')
+		self.assertNotEqual(res, False)
 
 
 
