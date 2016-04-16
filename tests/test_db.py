@@ -10,6 +10,7 @@ class TestDb(unittest.TestCase):
 	def test_db_init_opens_connection(self):
 		db = Db()
 		self.assertEqual(type(db.connection), sqlite3.Connection)
+		db.find()
 
 if __name__ == '__main__':
     unittest.main()
