@@ -12,7 +12,10 @@ class Db(object):
 
 
 	def execute(self,sql):
-		return self.connection.execute(sql)
+		try:
+			return self.connection.execute(sql)
+		except:
+			return False
 
 	def find(self,id):
 		try:
@@ -29,3 +32,23 @@ class Db(object):
 	def findbyattr(self,attributes):
 		pass
 
+	def create(self,data):
+		resolved = self.prepare(data)
+		sql = 'INSERT INTO '+self.table_name+' ('+resolved['column']+') VALUES (1,'+resolved['value']+')'
+		return self.execute(sql)
+		
+      
+
+	def prepare(self,data):
+		columns = 'id,'
+		values = ''
+		columnvalue = {}
+		for key,value in data.items():
+			columns += key + ','
+			values += "'" + str(value) + "',"
+		columnvalue['column'] = columns[:-1]
+		columnvalue['value'] = values[:-1]
+		return columnvalue
+
+	def update(self,data):
+		pass

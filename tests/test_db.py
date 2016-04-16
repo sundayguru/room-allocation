@@ -18,5 +18,25 @@ class TestDb(unittest.TestCase):
 		self.assertEqual(data, False)
 
 
+	def test_db_prepare(self):
+		data = {
+		'firstname':'sunday',
+		'lastname':'Nwuguru',
+		'allocation':1
+		}
+		res = self.db.prepare(data)
+		self.assertEqual(res, {'column': 'id,allocation,lastname,firstname', 'value': "'1','Nwuguru','sunday'"})
+
+
+	def test_db_create(self):
+		data = {
+		'firstname':'sunday',
+		'lastname':'Nwuguru',
+		'allocation':1
+		}
+		res = self.db.create(data)
+		self.assertEqual(res, False)
+
+
 if __name__ == '__main__':
     unittest.main()
