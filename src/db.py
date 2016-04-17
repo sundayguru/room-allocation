@@ -8,7 +8,6 @@ class Db(object):
 	name = 'amity'
 	table_name = 'table_name'
 	errormessage = ''
-	__id = 0
 
 	def __init__(self,dbname = 'amity',table_name = 'table_name'):
 		self.name = dbname
@@ -60,6 +59,7 @@ class Db(object):
 		return result
 
 	def findbyattr(self,attributes,logic = 'AND'):
+		"""returns matching results based on """
 		where_clause = self.prepareattr(attributes,logic)
 		cursor = self.execute("SELECT *  from " + self.table_name + " WHERE " + where_clause,attributes)
 		if cursor:
@@ -70,6 +70,7 @@ class Db(object):
 		return result
 
 	def create(self,data):
+		"""adds new row to the database based on table_name"""
 		data['date_time'] = datetime.now()
 		resolved = self.prepareinsert(data)
 		sql = 'INSERT INTO ' + self.table_name + ' (' + resolved['column'] + ') VALUES (' + resolved['place_holders'] + ')'
@@ -77,6 +78,7 @@ class Db(object):
 		
 
 	def prepareinsert(self,data):
+		"""returns dict of columns separated in comma and value place holders separated with comma"""
 		columns = ''
 		place_holders = '';
 		columnvalue = {}
@@ -92,14 +94,60 @@ class Db(object):
 		where_clause = '';
 		for key in data:
 			where_clause += key + ' = :' + str(key) + " " + logic + ' '
-		return where_clause[:-(len(logic) + 1)]
+		return where_clause[:-(len(logic) + 2)]
+
+	def prepareupdate(self,data):
+		"""returns combination of keys and place holder values for update method"""
+		set_data = '';
+		for key in data:
+			if key == 'id':
+				continue
+			set_data += key + ' = :' + str(key) + "," 
+		# -1 removes the last comma
+		return set_data[:-1]
 
 	def __db_setattr(self,result):
+		"""dynamic sets properties based on returned result"""
 		for key in result.keys():
 			self.__dict__[key] = result[key]
 
-	def update(self,data):
-		if not self.id:
-			return False
+	def update(self,data,id = None):
+		"""updates a row in the database using given id or loaded id"""
+		if not self.validateid(id):
+			raise ValueError
+
+		resolved = self.prepareupdate(data)
+		sql = 'UPDATE ' + self.table_name + ' set ' + resolved + ' where id = :id'
+		data['id'] = self.id
+		return self.execute(sql,data,True)
+
+	def validateid(self,id):
+		"""checks if id is supplied and loads the data
+		if id is not supplied, it checks if there is id property already set and returns bool """
+		if id:
+			self.find(id)
+			return self.errormessage == ''
+		else:
+			try:
+				if not self.id:
+					return False
+				return True
+			except:
+				return False
+
+	def delete(self,id = None):
+		"""delets a row in the database using given id or loaded id"""
+		if not self.validateid(id):
+			raise ValueError
+
+		sql = 'DELETE FROM ' + self.table_name + ' WHERE id = ' + str(id) + ';'
+		return self.execute(sql)
+
+	def lastid(self):
+		"""returns the id of the last record in a table"""
+		allrows  = self.findall()
+		return allrows[len(allrows) - 1]['id']
+
+
 
 
