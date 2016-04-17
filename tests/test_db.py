@@ -57,7 +57,32 @@ class TestDb(unittest.TestCase):
 		self.db.create(data)
 		res = self.db.findall()
 		self.assertEqual(self.db.errormessage, '')
-		self.assertNotEqual(res, False)
+		self.assertNotEqual(len(res), 0)
+
+
+	def test_db_findbyattr(self):
+		data = {
+		'firstname':'sunday',
+		'lastname':'Nwuguru',
+		'allocation':1
+		}
+		self.db.table_name = 'fellow'
+		self.db.create(data)
+		res = self.db.findbyattr({'firstname':'sunday','allocation':1},'AND')
+		self.assertEqual(self.db.errormessage, '')
+		self.assertNotEqual(len(res), 0)
+
+	def test_db_setattr(self):
+		data = {
+		'firstname':'sunday',
+		'lastname':'Nwuguru',
+		'allocation':1
+		}
+		self.db.table_name = 'fellow'
+		self.db.create(data)
+		res = self.db.find(1)
+		self.assertEqual(self.db.errormessage, '')
+		self.assertEqual(self.db.firstname, data['firstname'])
 
 
 

@@ -8,6 +8,7 @@ class Db(object):
 	name = 'amity'
 	table_name = 'table_name'
 	errormessage = ''
+	__id = 0
 
 	def __init__(self,dbname = 'amity',table_name = 'table_name'):
 		self.name = dbname
@@ -42,6 +43,7 @@ class Db(object):
 		cursor =  self.execute("SELECT *  from " + self.table_name + ' WHERE id = ' + str(id))
 		if cursor:
 			result = cursor.fetchone()
+			self.__db_setattr(result)	
 		else:
 			result =  False
 		self.__db_close()
@@ -57,8 +59,15 @@ class Db(object):
 		self.__db_close()
 		return result
 
-	def findbyattr(self,attributes):
-		pass
+	def findbyattr(self,attributes,logic = 'AND'):
+		where_clause = self.prepareattr(attributes,logic)
+		cursor = self.execute("SELECT *  from " + self.table_name + " WHERE " + where_clause,attributes)
+		if cursor:
+			result = cursor.fetchall()
+		else:
+			result = False
+		self.__db_close()
+		return result
 
 	def create(self,data):
 		data['date_time'] = datetime.now()
@@ -71,12 +80,26 @@ class Db(object):
 		columns = ''
 		place_holders = '';
 		columnvalue = {}
-		for key,value in data.items():
+		for key in data:
 			columns += key + ','
 			place_holders += ":" + str(key) + ","
 		columnvalue['column'] = columns[:-1]
 		columnvalue['place_holders'] = place_holders[:-1]
 		return columnvalue
 
+	def prepareattr(self,data,logic):
+		"""returns a condition statement to be used in querying database"""
+		where_clause = '';
+		for key in data:
+			where_clause += key + ' = :' + str(key) + " " + logic + ' '
+		return where_clause[:-(len(logic) + 1)]
+
+	def __db_setattr(self,result):
+		for key in result.keys():
+			self.__dict__[key] = result[key]
+
 	def update(self,data):
-		pass
+		if not self.id:
+			return False
+
+
