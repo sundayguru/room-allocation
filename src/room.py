@@ -7,11 +7,10 @@ class Room(Db):
 	is_filled = False
 
 	def __init__(self,name):
-		if type(name) != str or type(room_type) != str:
+		if type(name) != str:
 			raise ValueError
 
 		self.name = name
-		self.room_type = room_type
 		self.people = []
 
 	def setCapacity(self):
@@ -19,9 +18,7 @@ class Room(Db):
 			self.capacity = 6
 
 	def allocate(self,person):
-		if type(person) != Person:
-			raise ValueError
-
+		
 		if not self.allocateAble(person):
 			return False
 
@@ -36,9 +33,9 @@ class Room(Db):
 
 
 	def allocateAble(self,person):
-		if(person.person_type == 'STAFF' and self.room_type == 'O'):
+		if(person.person_type == 'STAFF' and self.room_type == 'OFFICE'):
 			return True
-		elif(person.person_type == 'FELLOW' and self.room_type == 'L'):
+		elif(person.person_type == 'FELLOW' and self.room_type == 'LIVINGSPACE'):
 			if(person.living_space == True):
 				return True
 
