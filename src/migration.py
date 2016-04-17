@@ -68,5 +68,5 @@ class Migration(Db):
 			except:
 				print table+' does not exist'
 
-m = Migration('amity_test')
+m = Migration()
 m.install()
