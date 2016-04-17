@@ -1,31 +1,24 @@
+from db import Db
 from person import Person
-class Room(object):
+class Room(Db):
 	""" room allocation """
 	capacity = 4
 	people = []
 	is_filled = False
-	translation = {'O':'OFFICE','L':'LIVING'}
 
-	def __init__(self,name,room_type):
-		if type(name) != str or type(room_type) != str:
-			raise ValueError
-
-		if room_type != 'L' and room_type != 'O':
+	def __init__(self,name):
+		if type(name) != str:
 			raise ValueError
 
 		self.name = name
-		self.room_type = room_type
 		self.people = []
-		self.setCapacity()
 
 	def setCapacity(self):
 		if self.room_type == 'O':
 			self.capacity = 6
 
 	def allocate(self,person):
-		if type(person) != Person:
-			raise ValueError
-
+		
 		if not self.allocateAble(person):
 			return False
 
@@ -40,9 +33,9 @@ class Room(object):
 
 
 	def allocateAble(self,person):
-		if(person.person_type == 'STAFF' and self.room_type == 'O'):
+		if(person.person_type == 'STAFF' and self.room_type == 'OFFICE'):
 			return True
-		elif(person.person_type == 'FELLOW' and self.room_type == 'L'):
+		elif(person.person_type == 'FELLOW' and self.room_type == 'LIVINGSPACE'):
 			if(person.living_space == True):
 				return True
 
@@ -51,7 +44,4 @@ class Room(object):
 			return False
 
 	def nameplate(self):
-		return self.name + ' (' + self.roomtype() + ')'
-
-	def roomtype(self):
-		return self.translation[self.room_type]
+		return self.name + ' (' + self.room_type + ')'
