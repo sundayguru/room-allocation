@@ -1,0 +1,70 @@
+import unittest
+from os import sys, path
+sys.path.append(path.dirname(path.dirname(path.abspath(__file__))))
+from src.fileman import FileMan
+
+class TestFileMan(unittest.TestCase):
+	"""Test cases for Fileman class"""
+
+	def test_fileman_init_sets_the_file_location(self):
+		f = FileMan('test.txt')
+		self.assertNotEqual(f.file_location, '')
+
+	def test_fileman_init_raise_valueerror_when_filename_is_not_string(self):
+		self.assertRaises(ValueError, FileMan, ['write_test.txt'])
+
+	def test_fileman_read(self):
+		f = FileMan('read_test.txt')
+		f.remove()
+		f.write('hello')
+		f.write('world')
+		self.assertEqual(f.read(), ['hello','world'])
+
+	def test_fileman_write(self):
+		f = FileMan('write_test.txt')
+		f.write('great')
+		self.assertNotEqual(f.read(), False)
+
+	def test_fileman_write_raise_valueerror_when_data_is_not_string(self):
+		f = FileMan('write_test.txt')
+		self.assertRaises(ValueError, f.write, ['great'])
+
+	def test_fileman_replace_replaces_the_file_content(self):
+		f = FileMan('replace_test.txt')
+		f.write('great')
+		f.replace('better')
+		self.assertEqual(f.read()[0], 'better')
+
+	def test_fileman_replace_writes_to_file(self):
+		f = FileMan('replace_test.txt')
+		f.replace('great')
+		self.assertEqual(f.read()[0], 'great')
+
+
+	def test_fileman_replace_raise_valueerror_when_data_is_not_string(self):
+		f = FileMan('write_test.txt')
+		self.assertRaises(ValueError, f.replace, ['great'])
+
+	def test_fileman_remove_returns_false_for_none_file(self):
+		f = FileMan('testy.txt')
+		self.assertEqual(f.remove(),False)
+
+	def test_fileman_remove(self):
+		f = FileMan('remove_test.txt')
+		f.write('great')
+		self.assertEqual(f.read()[0], 'great')
+		f.remove()
+		self.assertEqual(f.read(), False)
+
+	def test_fileman_validate_returns_false_for_none_file(self):
+		f = FileMan('testy.txt')
+		self.assertEqual(f.validate(),False)
+
+	def test_fileman_validate_returns_true_for_a_file(self):
+		f = FileMan('test.txt')
+		f.write('hello')
+		self.assertEqual(f.validate(),True)
+
+
+if __name__ == '__main__':
+    unittest.main()
