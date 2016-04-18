@@ -1,5 +1,6 @@
 import os
 from os import path
+import pickle
 from util import Util
 
 class FileMan(object):
@@ -55,3 +56,14 @@ class FileMan(object):
 			Util.printline('make this file is in data folder')
 			return False
 		return True
+
+	def pickledump(self,data):
+		"""dumps data structure into a file"""
+		with open(self.file_location,'wb') as file:
+			pickle.dump(data, file)
+		return True
+
+	def pickleload(self):
+		"""load data structure from a file"""
+		with open(self.file_location,'rb') as file:
+			return pickle.load(file)
