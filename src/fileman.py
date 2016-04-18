@@ -6,6 +6,9 @@ class FileMan(object):
 	"""FileMan reads and write to file"""
 
 	def __init__(self, filename):
+		if type(filename) != str:
+			raise ValueError
+			
 		self.file_location = Util.getbasepath() + '/data/' + filename
 
 	def read(self):
@@ -24,12 +27,18 @@ class FileMan(object):
 
 	def write(self,data):
 		"""appends content to a file"""
+		if type(data) != str:
+			raise ValueError
+
 		with open(self.file_location,'a+') as file:
 			file.read()
 			file.write(data+'\n')
 
 	def replace(self,data):
 		"""replaces content of a file"""
+		if type(data) != str:
+			raise ValueError
+			
 		with open(self.file_location,'w') as file:
 			file.write(data+'\n')
 
