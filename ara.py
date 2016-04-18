@@ -20,11 +20,12 @@ def createroom(args):
   room_types = args['<room_type>']
   print room_names,room_types
 
-
+#function mapping to avoid long if else chain
 func_map = {
   'create_room':createroom,
   'add_person':addperson,
 }
+
 if __name__ == '__main__':
     arguments = docopt(__doc__)
     
