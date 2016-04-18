@@ -1,6 +1,7 @@
 from db import Db
 from person import Person
-class Room(Db):
+from fileman import FileMan
+class Room(Db,FileMan):
 	""" room allocation """
 	capacity = 4
 	people = []
