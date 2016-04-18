@@ -10,7 +10,12 @@ class FileMan(object):
 		if type(filename) != str:
 			raise ValueError
 			
+		self.setfilelocation(filename)
+
+
+	def setfilelocation(self,filename):
 		self.file_location = Util.getbasepath() + '/data/' + filename
+
 
 	def read(self):
 		"""
