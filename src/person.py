@@ -44,11 +44,29 @@ class Person(Db,FileMan):
 	def name(self):
 		return self.firstname + ' ' + self.lastname
 
-	def save(self):
+	def allocate(self):
+		file = FileMan('room.pkl')
+		rooms = file.pickleload()
+		if not rooms:
+			print 'No room available'
+			return False
+		for room in rooms:
+			if room.allocate(self):
+				print 'Person allocated to '+ room.name
+				return True
+		else:
+			print 'No room available'
+			return False
+
+	def process(self):
 		self.setfilelocation('people.pkl')
 		people = self.pickleload()
 		if not people:
 			people = []
+
+		if self.allocate():
+			self.is_allocated = True
+			
 		people.append(self)
 		self.pickledump(people)
 		return True

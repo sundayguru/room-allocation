@@ -18,11 +18,11 @@ def addperson(args):
     person = Fellow(args['<firstname>'],args['<lastname>'],args['-w'])
   else:
     person = Staff(args['<firstname>'],args['<lastname>'],args['-w'])
-  if person.save():
+  if person.process():
+    print 'person created'
     records = person.pickleload()
     for index,p in enumerate(records):
       print index,p.fulldetails()
-    print 'person created'
 
 def createroom(args):
   room_names = args['<room_name>']
