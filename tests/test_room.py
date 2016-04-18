@@ -36,6 +36,13 @@ class TestRoom(unittest.TestCase):
 		self.assertEqual(room.allocate(person),False)
 
 
+	def test_room_inherits_fileman(self):
+		room = Room('Iroko')
+		room.setfilelocation('room_test.pkl')
+		room.pickledump({'name':'iroko'})
+		self.assertEqual(room.pickleload()['name'],'iroko')
+
+
 	"""Edge cases for init method"""
 	def test_room_init_accept_only_string(self):
 		self.assertRaises(ValueError, Room, 1)
