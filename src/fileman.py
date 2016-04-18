@@ -9,6 +9,10 @@ class FileMan(object):
 		self.file_location = Util.getbasepath() + '/data/' + filename
 
 	def read(self):
+		"""
+		reads a file and return content in a list
+		returns False is path is not a file
+		"""
 		if not Util.isfile(self.file_location):
 			Util.printline('make this file is in data folder')
 			return False

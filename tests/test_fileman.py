@@ -14,6 +14,10 @@ class TestFileMan(unittest.TestCase):
 		f = FileMan('test.txt')
 		self.assertEqual(f.read(), ['hello\n','world'])
 
+	def test_fileman_read_returns_false_for_none_file(self):
+		f = FileMan('testy.txt')
+		self.assertEqual(f.read(),False)
+
 	def test_fileman_write(self):
 		f = FileMan('write_test.txt')
 		f.write('great')
