@@ -65,6 +65,17 @@ class TestFileMan(unittest.TestCase):
 		f.write('hello')
 		self.assertEqual(f.validate(),True)
 
+	def test_fileman_pickledump(self):
+		f = FileMan('test_pickle.pkl')
+		r = f.pickledump({'a':'value 1','b':'value 2'})
+		self.assertEqual(r,True)
+
+	def test_fileman_pickleload(self):
+		f = FileMan('test_pickle.pkl')
+		f.remove()
+		f.pickledump({'a':'value 1','b':'value 2'})
+		r = f.pickleload()
+		self.assertEqual(r['a'],'value 1')
 
 if __name__ == '__main__':
     unittest.main()
