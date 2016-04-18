@@ -1,7 +1,6 @@
 import os
 import os.path
 
-
 class Util(object):
 
 
@@ -25,6 +24,9 @@ class Util(object):
 	def prompt(message):
 		return raw_input(message)
 
+	@staticmethod
+	def getbasepath():
+		return os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 	@staticmethod
 	def clearscreen():
 		os.system('clear')
