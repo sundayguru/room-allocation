@@ -1,8 +1,10 @@
 from db import Db
-class Person(Db):
+from fileman import FileMan
+class Person(Db,FileMan):
 	""" this will manage people creation"""
 	is_allocated = False
 	person_type = None
+	state_dict = {0:'NO',1:'YES'}
 
 	def __init__(self,firstname,lastname,living_space = False):
 		if type(firstname) != str or type(lastname) != str or type(living_space) != bool:
@@ -14,19 +16,30 @@ class Person(Db):
 
 
 	def fulldetails(self):
-		return self.name() + ' ' + self.person_type + ' ' + self.livingspace() + ' ' + self.isallocated()
+		return self.name() + ' ' + self.person_type + ' ' + self.getstatedict(self.living_space) + ' ' + self.getstatedict(self.is_allocated)
 
-	def livingspace(self):
-		if self.living_space:
-			return 'YES'
-		else:
-			return 'NO'
 
-	def isallocated(self):
-		if self.is_allocated:
-			return 'YES'
+	def getdetailsdict(self):
+		return {
+		'firstname':self.firstname,
+		'lastname':self.lastname,
+		'allocation':self.transalate(self.living_space),
+		'allocated':self.transalate(self.is_allocated),
+		'person_type':self.person_type,
+		}
+
+	def getstatedict(self,state):
+		"""returns corresponding value in state_dict """
+		try:
+			return self.state_dict[state]
+		except:
+			return self.state_dict[0]
+
+	def transalate(self,status):
+		if status:
+			return 1
 		else:
-			return 'NO'
+			return 0
 
 	def name(self):
 		return self.firstname + ' ' + self.lastname

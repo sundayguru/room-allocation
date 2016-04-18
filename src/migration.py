@@ -3,18 +3,13 @@ from db import Db
 class Migration(Db):
 	"""docstring for Migration"""
 	table_definitions = [
-	'''CREATE TABLE fellow
+	'''CREATE TABLE person
        (id INTEGER PRIMARY KEY AUTOINCREMENT,
        firstname         CHAR(255),
        lastname         CHAR(255),
+       person_type         CHAR(25),
        allocation       INT    NOT NULL,
-       date_time         CHAR(25));
-    ''',
-
-    '''CREATE TABLE staff
-       (id INTEGER PRIMARY KEY AUTOINCREMENT,
-       firstname         CHAR(255),
-       lastname         CHAR(255),
+       allocated       INT    NOT NULL,
        date_time         CHAR(25));
     ''',
 
@@ -27,22 +22,15 @@ class Migration(Db):
        date_time         CHAR(25));
     ''',
 
-    '''CREATE TABLE fellow_allocation
+    '''CREATE TABLE allocation
        (id INTEGER PRIMARY KEY AUTOINCREMENT,
-       fellow_id       INT     NOT NULL,
-       room_id       INT     NOT NULL,
-       date_time         CHAR(25));
-    ''',
-
-    '''CREATE TABLE staff_allocation
-       (id INTEGER PRIMARY KEY AUTOINCREMENT,
-       staff_id       INT     NOT NULL,
+       person_id       INT     NOT NULL,
        room_id       INT     NOT NULL,
        date_time         CHAR(25));
     '''
 	]
 
-	tables = ['fellow','staff','room','fellow_allocation','staff_allocation']
+	tables = ['person','room','allocation']
 
 	def __init__(self,dbname = 'amity'):
 		super(Migration,self).__init__(dbname)
