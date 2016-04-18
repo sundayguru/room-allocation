@@ -11,12 +11,11 @@ class TestFileMan(unittest.TestCase):
 		self.assertNotEqual(f.file_location, '')
 
 	def test_fileman_read(self):
-		f = FileMan('test.txt')
-		self.assertEqual(f.read(), ['hello\n','world'])
-
-	def test_fileman_read_returns_false_for_none_file(self):
-		f = FileMan('testy.txt')
-		self.assertEqual(f.read(),False)
+		f = FileMan('read_test.txt')
+		f.remove()
+		f.write('hello')
+		f.write('world')
+		self.assertEqual(f.read(), ['hello','world'])
 
 	def test_fileman_write(self):
 		f = FileMan('write_test.txt')
@@ -34,12 +33,27 @@ class TestFileMan(unittest.TestCase):
 		f.replace('great')
 		self.assertEqual(f.read()[0], 'great')
 
+
+	def test_fileman_remove_returns_false_for_none_file(self):
+		f = FileMan('testy.txt')
+		self.assertEqual(f.remove(),False)
+
 	def test_fileman_remove(self):
 		f = FileMan('remove_test.txt')
 		f.write('great')
 		self.assertEqual(f.read()[0], 'great')
 		f.remove()
 		self.assertEqual(f.read(), False)
+
+	def test_fileman_validate_returns_false_for_none_file(self):
+		f = FileMan('testy.txt')
+		self.assertEqual(f.validate(),False)
+
+	def test_fileman_validate_returns_true_for_a_file(self):
+		f = FileMan('test.txt')
+		f.write('hello')
+		self.assertEqual(f.validate(),True)
+
 
 if __name__ == '__main__':
     unittest.main()
