@@ -14,10 +14,6 @@ class Room(Db,FileMan):
 		self.name = name
 		self.people = []
 
-	def setCapacity(self):
-		if self.room_type == 'O':
-			self.capacity = 6
-
 	def allocate(self,person):
 		
 		if not self.allocateAble(person):

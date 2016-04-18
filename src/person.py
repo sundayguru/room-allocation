@@ -43,3 +43,13 @@ class Person(Db,FileMan):
 
 	def name(self):
 		return self.firstname + ' ' + self.lastname
+
+	def save(self):
+		self.setfilelocation('people.pkl')
+		people = self.pickleload()
+		if not people:
+			people = []
+		people.append(self)
+		self.pickledump(people)
+		return True
+

@@ -10,10 +10,19 @@ Options:
 
 """
 from docopt import docopt
+from src.fellow import Fellow
+from src.staff import Staff
 
 def addperson(args):
-    print 'add person'
-    print args
+  if args['<person_type>'].upper() == 'FELLOW':
+    person = Fellow(args['<firstname>'],args['<lastname>'],args['-w'])
+  else:
+    person = Staff(args['<firstname>'],args['<lastname>'],args['-w'])
+  if person.save():
+    records = person.pickleload()
+    for index,p in enumerate(records):
+      print index,p.fulldetails()
+    print 'person created'
 
 def createroom(args):
   room_names = args['<room_name>']
