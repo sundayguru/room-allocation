@@ -45,7 +45,7 @@ class Person(Db,FileMan):
 		return self.firstname + ' ' + self.lastname
 
 	def allocate(self):
-		file = FileMan('room.pkl')
+		file = FileMan('rooms.pkl')
 		rooms = file.pickleload()
 		if not rooms:
 			print 'No room available'
@@ -66,7 +66,7 @@ class Person(Db,FileMan):
 
 		if self.allocate():
 			self.is_allocated = True
-			
+
 		people.append(self)
 		self.pickledump(people)
 		return True

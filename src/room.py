@@ -42,3 +42,15 @@ class Room(Db,FileMan):
 
 	def nameplate(self):
 		return self.name + ' (' + self.room_type + ')'
+
+
+	def process(self):
+		self.setfilelocation('rooms.pkl')
+		rooms = self.pickleload()
+		if not rooms:
+			rooms = []
+
+		rooms.append(self)
+		self.pickledump(rooms)
+		return True
+
