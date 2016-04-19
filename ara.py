@@ -3,7 +3,8 @@
 Usage:
   ara create_room (<room_name> <room_type>)...
   ara add_person (<firstname> <lastname> <person_type>) [-w]
-  ara reallocate_person <person_id> <room_name>
+  ara reallocate_person <person_id> <new_room_name>
+  ara load_people <file_location>
 
 Options:
   -h --help     Show this screen.
@@ -19,6 +20,7 @@ func_map = [
   'create_room',
   'add_person',
   'reallocate_person',
+  'load_people',
 ]
 
 if __name__ == '__main__':

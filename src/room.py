@@ -6,6 +6,7 @@ class Room(Db,FileMan):
 	capacity = 4
 	people = []
 	is_filled = False
+	error_message = ''
 
 	def __init__(self,name):
 		if type(name) != str:
@@ -17,12 +18,14 @@ class Room(Db,FileMan):
 	def allocate(self,person):
 		
 		if not self.allocateAble(person):
+			self.error_message = person.name() + ' cannot be allocated to ' + self.name
 			return False
 
 		if(len(self.people) == self.capacity):
 			self.is_filled = True
 
 		if self.is_filled == True:
+			self.error_message = self.name + ' is occupied'
 			return False
 			
 		self.people.append(person)

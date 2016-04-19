@@ -3,6 +3,7 @@ from src.staff import Staff
 from src.office import Office
 from src.livingspace import LivingSpace
 from src.fileman import FileMan
+from src.util import Util
 
 class Amity(FileMan):
 	"""This is the entry point of the application"""
@@ -13,11 +14,13 @@ class Amity(FileMan):
 
 	def __init__(self, command):
 		self.command = command
-		self.load_people()
+		self.load_people_from_pickle()
 		self.load_rooms()
 
-	def load_people(self):
+	def load_people_from_pickle(self):
 		"""loads people from pickle file"""
+
+		print 'S/N -> ID -> Firstname -> Lastname -> Type -> Living Space -> Allocated'
 		self.setfilelocation('people.pkl')
 		people = self.pickleload()
 		if not people:
@@ -51,6 +54,7 @@ class Amity(FileMan):
 					continue
 
 			if room.allocate(person):
+				person.is_allocated = True
 				print 'Person allocated to '+ room.name
 				return True
 		else:
@@ -71,7 +75,8 @@ class Amity(FileMan):
 		try:
 			method(args)
 		except:
-			print 'method not implemented'
+			print "Something went wrong during runtime"
+		
 
 	def add_person(self,args):
 		if args['<person_type>'].upper() == 'FELLOW':
@@ -108,11 +113,11 @@ class Amity(FileMan):
 
 	def reallocate_person(self,args):
 		"""reallocate person from one room to another"""
-		room_name = args['<room_name>']
+		room_name = args['<new_room_name>']
 		person_id = args['<person_id>']
 		person = self.get_person_by_uid(person_id)
 		if not person:
-			print 'no person with ID: '+person_id
+			print 'no person with ID: ' + person_id
 			return False
 
 		if not person.is_allocated:
@@ -142,10 +147,37 @@ class Amity(FileMan):
 		  		if room_person.uid == person.uid:
 		  			room.people.pop(index)
 		  			self.exception_room = room.name
-		  			print person.name() + 'has been removed from ' +room.name
+		  			print person.name() + ' has been removed from ' +room.name
 		  			return True
 
 		return False
+
+	def load_people(self,args):
+		path = args['<file_location>']
+		if not Util.isfile(path):
+			Util.printline('File location is invalid')
+			return False
+
+		with open(path,'r') as file:
+			for line in file:
+				records = line.split()
+				living_space = False
+				firstname = records[0]
+				lastname = records[1]
+				person_type = records[2]
+				if person_type == 'FELLOW':
+					if(records[3] == 'Y'):
+						living_space = True
+					person = Fellow(firstname,lastname,living_space)
+				else:
+					person = Staff(firstname,lastname)
+
+				self.people.append(person)
+			  	print 'person created'
+			  	self.allocate(person)
+		  	self.save_state_to_pickle()
+		  	self.list_people()
+
 
 
 
