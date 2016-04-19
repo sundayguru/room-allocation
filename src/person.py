@@ -1,10 +1,13 @@
 from db import Db
 from fileman import FileMan
+from random import randint
+
 class Person(Db,FileMan):
 	""" this will manage people creation"""
 	is_allocated = False
 	person_type = None
 	state_dict = {0:'NO',1:'YES'}
+
 
 	def __init__(self,firstname,lastname,living_space = False):
 		if type(firstname) != str or type(lastname) != str or type(living_space) != bool:
@@ -13,6 +16,7 @@ class Person(Db,FileMan):
 		self.firstname = firstname
 		self.lastname = lastname
 		self.living_space = living_space
+		self.uid = firstname[0:1] + lastname[0:1] + str(randint(0,9))
 
 
 	def fulldetails(self):
@@ -57,17 +61,3 @@ class Person(Db,FileMan):
 		else:
 			print 'No room available'
 			return False
-
-	def process(self):
-		self.setfilelocation('people.pkl')
-		people = self.pickleload()
-		if not people:
-			people = []
-
-		if self.allocate():
-			self.is_allocated = True
-
-		people.append(self)
-		self.pickledump(people)
-		return True
-

@@ -3,7 +3,7 @@
 Usage:
   ara create_room (<room_name> <room_type>)...
   ara add_person (<firstname> <lastname> <person_type>) [-w]
-  ara reallocate_person (<person_id> <room_id>)
+  ara reallocate_person <person_id> <room_name>
 
 Options:
   -h --help     Show this screen.
