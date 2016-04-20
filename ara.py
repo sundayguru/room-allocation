@@ -7,7 +7,8 @@ Usage:
   ara load_people <file_location>
   ara print_allocations [(-o <file_name>)]
   ara print_unallocated [(-o <file_name>)]
-  
+  ara print_room <name_of_room>
+
 
 Options:
   -h --help     Show this screen.
@@ -26,6 +27,7 @@ func_map = [
   'load_people',
   'print_allocations',
   'print_unallocated',
+  'print_room',
 ]
 
 if __name__ == '__main__':

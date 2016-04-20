@@ -111,6 +111,14 @@ class Amity(FileMan):
 				if len(room.people) == 0:
 					room.people_list_with_room_name()
 
+	def print_room(self,args):
+		for room in self.rooms:
+			if room.name.lower() == args['<name_of_room>'].lower():
+				room.people_list_with_room_name()
+				break
+		else:
+			Util.printline(args['<name_of_room>'] + ' room not found')
+
 		
 
 	def send_allocations_to_file(self,file_name,allocated = True):
