@@ -19,8 +19,7 @@ class Amity(FileMan):
 
 	def load_people_from_pickle(self):
 		"""loads people from pickle file"""
-
-		print 'S/N -> ID -> Firstname -> Lastname -> Type -> Living Space -> Allocated'
+		
 		self.setfilelocation('people.pkl')
 		people = self.pickleload()
 		if not people:
@@ -37,7 +36,7 @@ class Amity(FileMan):
 		self.rooms = rooms
 	
 	def allocate(self,person,room_name = None):
-		"""allocates person to a room based room_name, exception_room or random"""
+		"""allocates person to a room based on room_name, exception_room or random"""
 
 		if person.person_type == 'FELLOW' and person.living_space == False:
 			return False
@@ -72,10 +71,7 @@ class Amity(FileMan):
 
 	def run_command(self,args):
 		method = getattr(self,self.command)
-		try:
-			method(args)
-		except:
-			print "Something went wrong during runtime"
+		method(args)
 		
 
 	def add_person(self,args):
@@ -91,12 +87,33 @@ class Amity(FileMan):
 	  	self.list_people()
 
 	def list_people(self):
+		print 'S/N -> ID -> Firstname -> Lastname -> Type -> Living Space -> Allocated'
 		for index,person in enumerate(self.people):
 			print (index + 1),person.uid,person.fulldetails()
 
 	def list_rooms(self):
 		for index,room in enumerate(self.rooms):
 			print index,room.nameplate()
+
+	def print_allocations(self,args):
+		if args['-o']:
+			self.send_allocations_to_file(args['<file_name>'])
+		else:
+			for room in self.rooms:
+				if len(room.people) != 0:
+					room.people_list_with_room_name()
+
+		
+
+	def send_allocations_to_file(self,file_name):
+		records = ''
+		for room in self.rooms:
+			if len(room.people) != 0:
+				records += room.people_list_with_room_name(False)
+
+		self.setfilelocation(file_name)
+		self.write(records)
+		Util.printline('Allocations successfully exported to data/' + file_name)
 
 	def create_room(self,args):
 	  room_names = args['<room_name>']

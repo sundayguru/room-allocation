@@ -1,6 +1,7 @@
 from db import Db
 from person import Person
 from fileman import FileMan
+from util import Util
 class Room(Db,FileMan):
 	""" room allocation """
 	capacity = 4
@@ -30,6 +31,17 @@ class Room(Db,FileMan):
 			
 		self.people.append(person)
 		return True
+
+	def people_list_with_room_name(self,output = True):
+		data = self.nameplate() + '\n'
+		members = ''
+		for person in self.people:
+			members += person.name() + ', '
+		
+		data += members[:-2] + '\n'
+		
+		return data if not output else Util.printline(data)
+
 
 
 	def allocateAble(self,person):

@@ -5,6 +5,7 @@ Usage:
   ara add_person (<firstname> <lastname> <person_type>) [-w]
   ara reallocate_person <person_id> <new_room_name>
   ara load_people <file_location>
+  ara print_allocations [(-o <file_name>)]
 
 Options:
   -h --help     Show this screen.
@@ -21,6 +22,7 @@ func_map = [
   'add_person',
   'reallocate_person',
   'load_people',
+  'print_allocations',
 ]
 
 if __name__ == '__main__':
