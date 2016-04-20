@@ -7,6 +7,9 @@ class Person(Db,FileMan):
 	is_allocated = False
 	person_type = None
 	state_dict = {0:'NO',1:'YES'}
+	table_name = 'person'
+	assigned_room = ''
+
 
 
 	def __init__(self,firstname,lastname,living_space = False):
@@ -61,3 +64,15 @@ class Person(Db,FileMan):
 		else:
 			print 'No room available'
 			return False
+
+
+	def save(self):
+		data = {
+		'firstname':self.firstname,
+		'lastname':self.lastname,
+		'person_type':self.person_type,
+		'allocated':self.transalate(self.is_allocated),
+		'living_space':self.transalate(self.living_space),
+		'assigned_room':self.assigned_room,
+		}
+		return self.create(data)

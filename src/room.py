@@ -57,3 +57,12 @@ class Room(Db,FileMan):
 
 	def nameplate(self):
 		return self.name + ' (' + self.room_type + ')'
+
+	def save(self):
+		data = {
+		'name':self.name,
+		'capacity':self.capacity,
+		'type':self.room_type,
+		'allocated':len(self.people),
+		}
+		return self.create(data)

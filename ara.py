@@ -8,6 +8,8 @@ Usage:
   ara print_allocations [(-o <file_name>)]
   ara print_unallocated [(-o <file_name>)]
   ara print_room <name_of_room>
+  ara save_state [--db=sqlite_database]
+  ara load_state [--db=sqlite_database]
 
 
 Options:
@@ -28,6 +30,8 @@ func_map = [
   'print_allocations',
   'print_unallocated',
   'print_room',
+  'save_state',
+  'load_state',
 ]
 
 if __name__ == '__main__':

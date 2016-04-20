@@ -9,13 +9,16 @@ class Db(object):
 	table_name = 'table_name'
 	errormessage = ''
 
-	def __init__(self,dbname = 'amity',table_name = 'table_name'):
-		self.name = dbname
+	def __init__(self,db_name = 'amity',table_name = 'table_name'):
+		self.name = db_name
 		self.table_name = table_name
-		root = path.dirname(path.dirname(path.abspath(__file__)))
-		self.db_location = root+'/'+self.name+'.db'
+		self.set_db(db_name)
 		
 
+
+	def set_db(self,name = 'amity'):
+		root = path.dirname(path.dirname(path.abspath(__file__)))
+		self.db_location = root+'/'+name+'.db'
 
 	def __db_open(self):
 		self.connection = sqlite3.connect(self.db_location)

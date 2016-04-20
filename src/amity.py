@@ -4,6 +4,7 @@ from src.office import Office
 from src.livingspace import LivingSpace
 from src.fileman import FileMan
 from src.util import Util
+from src.migration import Migration
 
 class Amity(FileMan):
 	"""This is the entry point of the application"""
@@ -54,6 +55,7 @@ class Amity(FileMan):
 
 			if room.allocate(person):
 				person.is_allocated = True
+				person.assigned_room = room.name
 				print 'Person allocated to '+ room.name
 				return True
 		else:
@@ -200,8 +202,8 @@ class Amity(FileMan):
 				firstname = records[0]
 				lastname = records[1]
 				person_type = records[2]
-				if person_type == 'FELLOW':
-					if(records[3] == 'Y'):
+				if person_type.upper() == 'FELLOW':
+					if(records[3].upper() == 'Y'):
 						living_space = True
 					person = Fellow(firstname,lastname,living_space)
 				else:
@@ -212,6 +214,42 @@ class Amity(FileMan):
 			  	self.allocate(person)
 		  	self.save_state_to_pickle()
 		  	self.list_people()
+
+	def save_state(self,args):
+		migrate = Migration()
+		migrate.install()
+		self.save_room_state()
+		self.save_people_state()
+
+
+	def save_room_state(self,db_name = 'amity'):
+		if len(self.rooms) == 0:
+			Util.printline('No room to save')
+			return False
+
+		for room in self.rooms:
+			room.set_db(db_name)
+			if room.save():
+				Util.printline(room.name + ' save!')
+
+		self.setfilelocation('rooms.pkl')
+		self.remove()
+
+	def save_people_state(self,db_name = 'amity'):
+		if len(self.people) == 0:
+			Util.printline('No person to save')
+			return False
+			
+		for person in self.people:
+			person.set_db(db_name)
+			if person.save():
+				Util.printline(person.name() + ' save!')
+
+		self.setfilelocation('people.pkl')
+		self.remove()
+
+	def load_state(self,args):
+		pass
 
 
 
