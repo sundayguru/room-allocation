@@ -103,17 +103,27 @@ class Amity(FileMan):
 				if len(room.people) != 0:
 					room.people_list_with_room_name()
 
+	def print_unallocated(self,args):
+		if args['-o']:
+			self.send_allocations_to_file(args['<file_name>'],False)
+		else:
+			for room in self.rooms:
+				if len(room.people) == 0:
+					room.people_list_with_room_name()
+
 		
 
-	def send_allocations_to_file(self,file_name):
+	def send_allocations_to_file(self,file_name,allocated = True):
 		records = ''
 		for room in self.rooms:
-			if len(room.people) != 0:
+			if len(room.people) != 0 and allocated:
 				records += room.people_list_with_room_name(False)
+			elif not allocated and len(room.people) == 0:
+				records += room.nameplate() + '\n'
 
 		self.setfilelocation(file_name)
-		self.write(records)
-		Util.printline('Allocations successfully exported to data/' + file_name)
+		self.replace(records)
+		Util.printline('records successfully exported to data/' + file_name)
 
 	def create_room(self,args):
 	  room_names = args['<room_name>']

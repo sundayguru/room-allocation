@@ -6,6 +6,8 @@ Usage:
   ara reallocate_person <person_id> <new_room_name>
   ara load_people <file_location>
   ara print_allocations [(-o <file_name>)]
+  ara print_unallocated [(-o <file_name>)]
+  
 
 Options:
   -h --help     Show this screen.
@@ -23,6 +25,7 @@ func_map = [
   'reallocate_person',
   'load_people',
   'print_allocations',
+  'print_unallocated',
 ]
 
 if __name__ == '__main__':
