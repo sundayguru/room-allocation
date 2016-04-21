@@ -95,13 +95,15 @@ class Amity(FileMan):
 		method(args)	
 
 	def add_person(self,args):
+		firstname = args['<firstname>'].upper()
+		lastname = args['<lastname>'].upper()
 		if args['<person_type>'].upper() == 'FELLOW':
-			person = Fellow(args['<firstname>'],args['<lastname>'],args['-w'])
+			person = Fellow(firstname,lastname,args['-w'])
 	  	else:
-	  		person = Staff(args['<firstname>'],args['<lastname>'],args['-w'])
+	  		person = Staff(firstname,lastname,args['-w'])
 
 	  	self.people.append(person)
-	  	print 'person created'
+	  	print person.name() + ' successfully created'
 	  	self.allocate(person)
 	  	self.save_state_to_pickle()
 	  	self.list_people()
@@ -142,21 +144,53 @@ class Amity(FileMan):
 					room.people_list_with_room_name()
 
 			if counter > 0:
-				Util.printline(counter + ' rooms allocated')
+				Util.printline(str(counter) + ' of ' + str(len(self.rooms)) + ' room(s) allocated')
 			else:
 				Util.printline('No room has been allocated')
 
 	def print_unallocated(self,args):
+		if args['-r']:
+			self.print_unallocated_room(args)
+		else:
+			self.print_unallocated_people(args)
+
+	def print_unallocated_room(self,args):
 		if len(self.rooms) == 0:
 			Util.printline('No room found')
 			return False
-			
+		
+		counter = 0	
 		if args['-o']:
-			self.send_allocations_to_file(args['<file_name>'],False)
+			self.send_room_allocations_to_file(args['<file_name>'],False)
 		else:
 			for room in self.rooms:
 				if len(room.people) == 0:
+					counter += 1
 					room.people_list_with_room_name()
+
+			if counter > 0:
+				Util.printline(str(counter) + ' unallocated room(s)')
+			else:
+				Util.printline('No unallocated room')
+
+	def print_unallocated_people(self,args):
+		if len(self.people) == 0:
+			Util.printline('No person found')
+			return False
+		
+		counter = 0	
+		if args['-o']:
+			self.send_people_allocations_to_file(args['<file_name>'],False)
+		else:
+			for person in self.people:
+				if len(person.assigned_room) == 0:
+					counter += 1
+					Util.printline(person.fulldetails())
+
+			if counter > 0:
+				Util.printline(str(counter) + ' unallocated people')
+			else:
+				Util.printline('No unallocated person')
 
 	def print_room(self,args):
 		for room in self.rooms:
@@ -166,7 +200,7 @@ class Amity(FileMan):
 		else:
 			Util.printline(args['<name_of_room>'] + ' room not found')
 
-	def send_allocations_to_file(self,file_name,allocated = True):
+	def send_room_allocations_to_file(self,file_name,allocated = True):
 		records = ''
 		for room in self.rooms:
 			if len(room.people) != 0 and allocated:
@@ -178,18 +212,32 @@ class Amity(FileMan):
 		self.replace(records)
 		Util.printline('records successfully exported to data/' + file_name)
 
+
+	def send_people_allocations_to_file(self,file_name,allocated = True):
+		records = ''
+		for person in self.people:
+			if len(person.assigned_room) != 0 and allocated:
+				records += person.fulldetails() + '\n'
+			elif not allocated and len(person.assigned_room) == 0:
+				records += person.fulldetails() + '\n'
+
+		self.setfilelocation(file_name)
+		self.replace(records)
+		Util.printline('records successfully exported to data/' + file_name)
+
 	def create_room(self,args):
-	  room_names = args['<room_name>']
-	  room_types = args['<room_type>']
-	  for name,room_type in zip(room_names,room_types):
-	    if room_type.upper() == 'OFFICE':
-	      room = Office(name)
-	    else:
-	      room = LivingSpace(name)
-	    self.rooms.append(room)
-	    print room.name + ' successful created'
-	  self.save_state_to_pickle()
-	  self.list_rooms()
+		"""Creates room(s) and save to pickle"""
+		room_names = args['<room_name>']
+		room_types = args['<room_type>']
+		for name,room_type in zip(room_names,room_types):
+			if room_type.upper() == 'OFFICE':
+			  room = Office(name.upper())
+			else:
+			  room = LivingSpace(name.upper())
+			self.rooms.append(room)
+			print room.name + ' successful created'
+		self.save_state_to_pickle()
+		self.list_rooms()
 
 	def reallocate_person(self,args):
 		"""reallocate person from one room to another"""

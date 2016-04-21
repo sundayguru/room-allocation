@@ -6,7 +6,7 @@ Usage:
   ara reallocate_person <person_id> <new_room_name>
   ara load_people <file_location>
   ara print_allocations [(-o <file_name>)]
-  ara print_unallocated [(-o <file_name>)]
+  ara print_unallocated [(-o <file_name>) -r]
   ara print_room <name_of_room>
   ara save_state [--db=sqlite_database]
   ara load_state [--db=sqlite_database]
