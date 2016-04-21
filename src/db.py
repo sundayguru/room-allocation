@@ -14,8 +14,6 @@ class Db(object):
 		self.table_name = table_name
 		self.set_db(db_name)
 		
-
-
 	def set_db(self,name = 'amity'):
 		root = path.dirname(path.dirname(path.abspath(__file__)))
 		self.db_location = root+'/'+name+'.db'

@@ -5,6 +5,7 @@ from src.livingspace import LivingSpace
 from src.fileman import FileMan
 from src.util import Util
 from src.migration import Migration
+from src.db import Db
 
 class Amity(FileMan):
 	"""This is the entry point of the application"""
@@ -12,11 +13,13 @@ class Amity(FileMan):
 	rooms = [] #this will hold all available rooms
 	people = [] #this will hold all available person
 	exception_room = ''
+	setting = {'drop_db':False}
 
 	def __init__(self, command):
 		self.command = command
 		self.load_people_from_pickle()
 		self.load_rooms()
+		self.load_settings()
 
 	def load_people_from_pickle(self):
 		"""loads people from pickle file"""
@@ -26,6 +29,14 @@ class Amity(FileMan):
 		if not people:
 			people = []
 		self.people = people
+		
+	def load_settings(self):
+		"""loads settings from pickle file"""
+		self.setfilelocation('config.pkl')
+		settings = self.pickleload()
+		if not settings:
+			settings = {'drop_db':False}
+		self.settings = settings
 		
 	def load_rooms(self):
 		"""loads rooms from pickle file"""
@@ -57,7 +68,7 @@ class Amity(FileMan):
 				person.is_allocated = True
 				person.assigned_room = room.name
 				print 'Person allocated to '+ room.name
-				return True
+				return True 
 		else:
 			print 'No room available'
 			return False
@@ -68,6 +79,16 @@ class Amity(FileMan):
 		self.pickledump(self.people)
 		self.setfilelocation('rooms.pkl')
 		self.pickledump(self.rooms)
+		self.setfilelocation('config.pkl')
+		self.pickledump(self.settings)
+
+	def drop_pickle_files(self):
+		"""removes all pickle file except config """
+		self.setfilelocation('people.pkl')
+		self.remove()
+		self.setfilelocation('rooms.pkl')
+		self.remove()
+		
 
 	def run_command(self,args):
 		method = getattr(self,self.command)
@@ -85,34 +106,45 @@ class Amity(FileMan):
 	  	self.save_state_to_pickle()
 	  	self.list_people()
 
-	def list_people(self):
+	def list_people(self,args = {}):
+		Util.printtwoline('LIST OF AVAILABLE PEOPLE')
 		if len(self.people) == 0:
 			Util.printline('No person found')
 			return False
 
-		Util('S/N -> ID -> Firstname -> Lastname -> Type -> Living Space -> Allocated')
+		Util.printtwoline('S/N -> ID -> Firstname -> Lastname -> Type -> Living Space -> Allocated')
 		for index,person in enumerate(self.people):
 			print (index + 1),person.uid,person.fulldetails()
+			Util.printdivider()
 
-	def list_rooms(self):
+	def list_rooms(self,args = {}):
+		Util.printtwoline('LIST OF AVAILABLE ROOMS')
 		if len(self.rooms) == 0:
 			Util.printline('No room found')
 			return False
 
 		for index,room in enumerate(self.rooms):
 			print index,room.nameplate()
+			Util.printdivider()
 
 	def print_allocations(self,args):
 		if len(self.rooms) == 0:
 			Util.printline('No room found')
 			return False
 
+		counter = 0
 		if args['-o']:
 			self.send_allocations_to_file(args['<file_name>'])
 		else:
 			for room in self.rooms:
 				if len(room.people) != 0:
+					counter += 1
 					room.people_list_with_room_name()
+
+			if counter > 0:
+				Util.printline(counter + ' rooms allocated')
+			else:
+				Util.printline('No room has been allocated')
 
 	def print_unallocated(self,args):
 		if len(self.rooms) == 0:
@@ -229,6 +261,12 @@ class Amity(FileMan):
 
 	def save_state(self,args):
 		migrate = Migration()
+		if self.settings['drop_db']:
+			migrate.drop()
+			self.settings['drop_db'] = False
+			self.setfilelocation('config.pkl')
+			self.pickledump()
+
 		migrate.install()
 		self.save_room_state()
 		self.save_people_state()
@@ -246,6 +284,57 @@ class Amity(FileMan):
 		self.setfilelocation('rooms.pkl')
 		self.remove()
 
+	def load_room_state(self,db_name = 'amity'):
+		db = Db(db_name,'room')
+		rooms = db.findall()
+		if not rooms:
+			Util.printline('No rooms record found')
+			return False
+			
+		for row in rooms:
+			if row['type'] == 'OFFICE':
+				room = Office(str(row['name']))
+			else:
+				room = LivingSpace(str(row['name']))
+
+			if int(row['allocated']) > 0:
+				db.table_name = 'person'
+				people = db.findbyattr({'assigned_room':room.name})
+				for item in people:
+					person = self.get_person(item)
+					room.allocate(person)
+			self.rooms.append(room)
+
+		self.list_rooms()
+
+	def get_person(self,row):
+		living_space = False
+		if row['living_space'] == 1:
+			living_space = True
+
+		if row['person_type'] == 'FELLOW':
+			person = Fellow(str(row['firstname']),str(row['lastname']),living_space)
+		else:
+			person = Staff(str(row['firstname']),str(row['lastname']),living_space)
+
+		return person
+
+	def load_people_state(self,db_name = 'amity'):
+		db = Db(db_name,'person')
+		people = db.findall()
+		if not people:
+			Util.printline('No people record found')
+			return False
+
+		for row in people:
+			person = self.get_person(row)
+			if row['allocated'] == 1:
+				person.is_allocated = True
+
+			self.people.append(person)
+
+		self.list_people()
+
 	def save_people_state(self,db_name = 'amity'):
 		if len(self.people) == 0:
 			Util.printline('No person to save')
@@ -260,7 +349,14 @@ class Amity(FileMan):
 		self.remove()
 
 	def load_state(self,args):
-		pass
+		"""loads people and room records from sqlite database and save it to a pickle file"""
+		self.drop_pickle_files()
+		self.load_room_state()
+		self.load_people_state()
+		self.save_state_to_pickle()
+		self.setting['drop_db'] = True
+		self.save_state_to_pickle()
+
 
 
 

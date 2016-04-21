@@ -10,6 +10,8 @@ Usage:
   ara print_room <name_of_room>
   ara save_state [--db=sqlite_database]
   ara load_state [--db=sqlite_database]
+  ara list_people [-u]
+  ara list_rooms [-u]
 
 
 Options:
@@ -32,6 +34,8 @@ func_map = [
   'print_room',
   'save_state',
   'load_state',
+  'list_people',
+  'list_rooms',
 ]
 
 if __name__ == '__main__':
