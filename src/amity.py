@@ -98,6 +98,10 @@ class Amity(FileMan):
 			print index,room.nameplate()
 
 	def print_allocations(self,args):
+		if len(self.rooms) == 0:
+			Util.printline('No room found')
+			return False
+
 		if args['-o']:
 			self.send_allocations_to_file(args['<file_name>'])
 		else:
@@ -106,6 +110,10 @@ class Amity(FileMan):
 					room.people_list_with_room_name()
 
 	def print_unallocated(self,args):
+		if len(self.rooms) == 0:
+			Util.printline('No room found')
+			return False
+			
 		if args['-o']:
 			self.send_allocations_to_file(args['<file_name>'],False)
 		else:
