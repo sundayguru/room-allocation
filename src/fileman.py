@@ -6,15 +6,15 @@ from util import Util
 class FileMan(object):
 	"""FileMan reads and write to file"""
 
-	def __init__(self, filename):
-		if type(filename) != str:
+	def __init__(self, file_name):
+		if type(file_name) != str:
 			raise ValueError
 			
-		self.setfilelocation(filename)
+		self.set_file_location(file_name)
 
 
-	def setfilelocation(self,filename):
-		self.file_location = Util.getbasepath() + '/data/' + filename
+	def set_file_location(self,file_name):
+		self.file_location = Util.get_base_path() + '/data/' + file_name
 
 
 	def read(self):
@@ -57,18 +57,18 @@ class FileMan(object):
 
 	def validate(self):
 		"""validates the existence of a give file location"""
-		if not Util.isfile(self.file_location):
+		if not Util.is_file(self.file_location):
 			#Util.printline('make sure this file is in data folder')
 			return False
 		return True
 
-	def pickledump(self,data):
+	def pickle_dump(self,data):
 		"""dumps data structure into a file"""
 		with open(self.file_location,'wb') as file:
 			pickle.dump(data, file)
 		return True
 
-	def pickleload(self):
+	def pickle_load(self):
 		"""load data structure from a file"""
 		if not self.validate():
 			return False

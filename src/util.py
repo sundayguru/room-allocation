@@ -5,69 +5,42 @@ class Util(object):
 	"""this class contains utility methods"""
 
 	@staticmethod
-	def isfile(file_path):
+	def is_file(file_path):
 		return os.path.isfile(file_path) 
 
 	@staticmethod
-	def printline(message):
+	def print_line(message):
 		Util.printdivider()
 		print message
 
 	@staticmethod
-	def printtwoline(message):
-		Util.printdivider()
+	def print_two_line(message):
+		Util.print_divider()
 		print message
-		Util.printdivider()
-
+		Util.print_divider()
 
 	@staticmethod
 	def prompt(message):
 		return raw_input(message)
 
 	@staticmethod
-	def getbasepath():
+	def get_base_path():
 		return os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
 	@staticmethod
-	def clearscreen():
+	def clear_screen():
 		os.system('clear')
 		Util.welcome()
 
 	@staticmethod
-	def starttipscommandlistener():
-		command = Util.prompt('Enter Command: ')
-		while len(command) == 0:
-			Util.printline('Invalid Command')
-			Util.showstarttips()
-			command = Util.prompt('Enter Command: ')
-		else:
-			return command.upper()
-
-	@staticmethod
-	def printdivider():
+	def print_divider():
 		print '---------------------------------------------------------------------------'
-		
-	@staticmethod
-	def showstarttips():
-		Util.printline('INSTRUCTIONS');
-		Util.printdivider()
-		print 'COMMAND           DESCRIPTION'
-		print 'LP          List all people'
-		print 'LP -A       List all allocated people'
-		print 'LP -U       List all unallocated people'
-		print 'LR          List all rooms'
-		print 'LR -A       List all allocations'
-		print 'LR -U       List all unallocated rooms'
-		print 'AP          Add people'
-		print 'AR          Add Room'
-		print 'I           Show this instructions again'
-		print 'Q           Quit Application'
-		Util.printdivider()
-
+	
 	@staticmethod
 	def welcome():
-		Util.printdivider()
-		Util.printdivider()
+		Util.print_divider()
+		Util.print_divider()
 		print '                     WELCOME TO ALLOCATION APP                               '
 		print '           One stop solution for room allocation management                  '
-		Util.printdivider()
-		Util.printdivider()
+		Util.print_divider()
+		Util.print_divider()
