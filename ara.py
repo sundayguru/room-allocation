@@ -4,6 +4,7 @@ Usage:
   ara create_room (<room_name> <room_type>)...
   ara add_person (<firstname> <lastname> <person_type>) [-w]
   ara reallocate_person <person_id> <new_room_name>
+  ara allocate_person <person_id> <new_room_name> [-w]
   ara load_people <file_location>
   ara print_allocations [(-o <file_name>)]
   ara print_unallocated [(-o <file_name>) -r]
@@ -16,7 +17,7 @@ Usage:
 
 Options:
   -h --help     Show this screen.
-  -w            want accomodation
+  -w            wants accomodation
 
 """
 from docopt import docopt

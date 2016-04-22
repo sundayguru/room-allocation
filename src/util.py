@@ -10,7 +10,7 @@ class Util(object):
 
 	@staticmethod
 	def print_line(message):
-		Util.printdivider()
+		Util.print_divider()
 		print message
 
 	@staticmethod
