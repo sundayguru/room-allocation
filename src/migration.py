@@ -5,10 +5,11 @@ class Migration(Db):
 	table_definitions = [
 	'''CREATE TABLE person
        (id INTEGER PRIMARY KEY AUTOINCREMENT,
+       assigned_room         CHAR(255),
        firstname         CHAR(255),
        lastname         CHAR(255),
        person_type         CHAR(25),
-       allocation       INT    NOT NULL,
+       living_space       INT    NOT NULL,
        allocated       INT    NOT NULL,
        date_time         CHAR(25));
     ''',
@@ -20,17 +21,10 @@ class Migration(Db):
        type           CHAR(25),
        allocated       INT     NOT NULL,
        date_time         CHAR(25));
-    ''',
-
-    '''CREATE TABLE allocation
-       (id INTEGER PRIMARY KEY AUTOINCREMENT,
-       person_id       INT     NOT NULL,
-       room_id       INT     NOT NULL,
-       date_time         CHAR(25));
     '''
 	]
 
-	tables = ['person','room','allocation']
+	tables = ['person','room']
 
 	def __init__(self,dbname = 'amity'):
 		super(Migration,self).__init__(dbname)
@@ -41,11 +35,11 @@ class Migration(Db):
 		for index,sql in enumerate(self.table_definitions):
 			try:
 				if self.execute(sql):
-					print 'table created'
+					print self.tables[index] + ' table created'
 				else:
-					print 'failed to create table'
+					print self.tables[index] + ' table already exists'
 			except:
-				print 'table exists'
+				print self.tables[index] + ' table exists'
 
 	
 	def drop(self):
@@ -56,5 +50,3 @@ class Migration(Db):
 			except:
 				print table+' does not exist'
 
-m = Migration()
-m.install()

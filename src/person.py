@@ -1,10 +1,16 @@
 from db import Db
 from fileman import FileMan
+from random import randint
+
 class Person(Db,FileMan):
 	""" this will manage people creation"""
 	is_allocated = False
 	person_type = None
 	state_dict = {0:'NO',1:'YES'}
+	table_name = 'person'
+	assigned_room = ''
+
+
 
 	def __init__(self,firstname,lastname,living_space = False):
 		if type(firstname) != str or type(lastname) != str or type(living_space) != bool:
@@ -13,6 +19,7 @@ class Person(Db,FileMan):
 		self.firstname = firstname
 		self.lastname = lastname
 		self.living_space = living_space
+		self.uid = firstname[0:1] + lastname[0:1] + str(randint(0,9))
 
 
 	def fulldetails(self):
@@ -43,3 +50,29 @@ class Person(Db,FileMan):
 
 	def name(self):
 		return self.firstname + ' ' + self.lastname
+
+	def allocate(self):
+		file = FileMan('rooms.pkl')
+		rooms = file.pickleload()
+		if not rooms:
+			print 'No room available'
+			return False
+		for room in rooms:
+			if room.allocate(self):
+				print 'Person allocated to '+ room.name
+				return True
+		else:
+			print 'No room available'
+			return False
+
+
+	def save(self):
+		data = {
+		'firstname':self.firstname,
+		'lastname':self.lastname,
+		'person_type':self.person_type,
+		'allocated':self.transalate(self.is_allocated),
+		'living_space':self.transalate(self.living_space),
+		'assigned_room':self.assigned_room,
+		}
+		return self.create(data)

@@ -58,7 +58,7 @@ class FileMan(object):
 	def validate(self):
 		"""validates the existence of a give file location"""
 		if not Util.isfile(self.file_location):
-			Util.printline('make this file is in data folder')
+			#Util.printline('make sure this file is in data folder')
 			return False
 		return True
 
@@ -70,5 +70,8 @@ class FileMan(object):
 
 	def pickleload(self):
 		"""load data structure from a file"""
+		if not self.validate():
+			return False
+
 		with open(self.file_location,'rb') as file:
 			return pickle.load(file)
