@@ -260,7 +260,7 @@ class Amity(FileMan):
 				return False
 
 		if person.assigned_room == room_name:
-			Util.printline('You cannot reallocate ' + person.name() + ' to the same room')
+			Util.print_line('You cannot reallocate ' + person.name() + ' to the same room')
 			return False
 
 		room = self.remove_person_from_room(person)
@@ -269,7 +269,28 @@ class Amity(FileMan):
 				room.allocate(person)
 
 		self.save_state_to_pickle()
-		self.list_people()
+
+	def allocate_person(self,args):
+		"""allocate person to a room"""
+		room_name = args['<new_room_name>'].upper()
+		person_id = args['<person_id>'].upper()
+		person = self.get_person_by_uid(person_id)
+		if not person:
+			print 'no person with ID: ' + person_id
+			self.list_people()
+			return False
+
+		if person.is_allocated:
+			print person.name() + ' has been allocated to a room'
+			return False
+
+		if args['-w']:
+			person.living_space = True
+
+		if not self.allocate(person,room_name):
+			Util.print_two_line('Unable to allocate ' + person.name())
+
+		self.save_state_to_pickle()
 
 	def get_person_by_uid(self,uid):
 		for person in self.people:
