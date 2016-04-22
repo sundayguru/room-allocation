@@ -38,9 +38,9 @@ class TestRoom(unittest.TestCase):
 
 	def test_room_inherits_fileman(self):
 		room = Room('Iroko')
-		room.setfilelocation('room_test.pkl')
-		room.pickledump({'name':'iroko'})
-		self.assertEqual(room.pickleload()['name'],'iroko')
+		room.set_file_location('room_test.pkl')
+		room.pickle_dump({'name':'iroko'})
+		self.assertEqual(room.pickle_load()['name'],'iroko')
 
 
 	"""Edge cases for init method"""
