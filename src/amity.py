@@ -16,10 +16,12 @@ class Amity(FileMan):
 	setting = {'drop_db':False}
 
 	def __init__(self, command):
+		Util.clearscreen()
 		self.command = command
 		self.load_people_from_pickle()
 		self.load_rooms()
 		self.load_settings()
+		print Util.getbasepath()
 
 	def load_people_from_pickle(self):
 		"""loads people from pickle file"""
@@ -70,7 +72,7 @@ class Amity(FileMan):
 				print 'Person allocated to '+ room.name
 				return True 
 		else:
-			print 'No room available'
+			print room_name + ' room is not available'
 			return False
 	
 	def save_state_to_pickle(self):
@@ -88,8 +90,7 @@ class Amity(FileMan):
 		self.remove()
 		self.setfilelocation('rooms.pkl')
 		self.remove()
-		
-
+		 
 	def run_command(self,args):
 		method = getattr(self,self.command)
 		method(args)	
@@ -130,13 +131,14 @@ class Amity(FileMan):
 			Util.printdivider()
 
 	def print_allocations(self,args):
+		Util.printline('LIST OF ALLOCATIONS')
 		if len(self.rooms) == 0:
 			Util.printline('No room found')
 			return False
 
 		counter = 0
 		if args['-o']:
-			self.send_allocations_to_file(args['<file_name>'])
+			self.send_room_allocations_to_file(args['<file_name>'])
 		else:
 			for room in self.rooms:
 				if len(room.people) != 0:
@@ -150,8 +152,10 @@ class Amity(FileMan):
 
 	def print_unallocated(self,args):
 		if args['-r']:
+			Util.printline('LIST OF UNALLOCATED ROOMS')
 			self.print_unallocated_room(args)
 		else:
+			Util.printline('LIST OF UNALLOCATED PEOPLE')
 			self.print_unallocated_people(args)
 
 	def print_unallocated_room(self,args):
@@ -188,7 +192,7 @@ class Amity(FileMan):
 					Util.printline(person.fulldetails())
 
 			if counter > 0:
-				Util.printline(str(counter) + ' unallocated people')
+				Util.printline(str(counter) + ' unallocated person')
 			else:
 				Util.printline('No unallocated person')
 
@@ -211,7 +215,6 @@ class Amity(FileMan):
 		self.setfilelocation(file_name)
 		self.replace(records)
 		Util.printline('records successfully exported to data/' + file_name)
-
 
 	def send_people_allocations_to_file(self,file_name,allocated = True):
 		records = ''
@@ -241,8 +244,8 @@ class Amity(FileMan):
 
 	def reallocate_person(self,args):
 		"""reallocate person from one room to another"""
-		room_name = args['<new_room_name>']
-		person_id = args['<person_id>']
+		room_name = args['<new_room_name>'].upper()
+		person_id = args['<person_id>'].upper()
 		person = self.get_person_by_uid(person_id)
 		if not person:
 			print 'no person with ID: ' + person_id
@@ -251,10 +254,19 @@ class Amity(FileMan):
 
 		if not person.is_allocated:
 			print person.name() + ' has not been allocated to a room'
+			answer = Util.prompt('Do you want to allocate ' + person.name() + ' to ' + room_name + '? Y/N: ')
+			if answer == 'N':
+				return False
+
+		if person.assigned_room == room_name:
+			Util.printline('You cannot reallocate ' + person.name() + ' to the same room')
 			return False
 
-		self.remove_person_from_room(person)
-		self.allocate(person,room_name)
+		room = self.remove_person_from_room(person)
+		if not self.allocate(person,room_name):
+			if room != False:
+				room.allocate(person)
+
 		self.save_state_to_pickle()
 		self.list_people()
 
@@ -277,7 +289,7 @@ class Amity(FileMan):
 		  			room.people.pop(index)
 		  			self.exception_room = room.name
 		  			print person.name() + ' has been removed from ' +room.name
-		  			return True
+		  			return room
 
 		return False
 
@@ -398,10 +410,15 @@ class Amity(FileMan):
 
 	def load_state(self,args):
 		"""loads people and room records from sqlite database and save it to a pickle file"""
+		if len(self.people) != 0 or len(self.rooms) != 0:
+			Util.printline('You have unsaved changes')
+			answer = Util.prompt('do you wish to discard? Y/N ')
+			if answer.upper() == 'N':
+				return False
+
 		self.drop_pickle_files()
 		self.load_room_state()
 		self.load_people_state()
-		self.save_state_to_pickle()
 		self.setting['drop_db'] = True
 		self.save_state_to_pickle()
 
