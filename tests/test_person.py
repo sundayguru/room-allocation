@@ -17,9 +17,9 @@ class TestPerson(unittest.TestCase):
 
 	def test_person_inherits_fileman(self):
 		person = Person('sunday','nwuguru',True)
-		person.setfilelocation('person_test.pkl')
-		person.pickledump(person.getdetailsdict())
-		self.assertEqual(person.pickleload()['firstname'],person.getdetailsdict()['firstname'])
+		person.set_file_location('person_test.pkl')
+		person.pickle_dump(person.get_details_dict())
+		self.assertEqual(person.pickle_load()['firstname'],person.get_details_dict()['firstname'])
 
 	"""Edge cases for init method"""
 	def test_person_init_accept_only_string_for_name_and_type(self):

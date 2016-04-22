@@ -22,11 +22,11 @@ class Person(Db,FileMan):
 		self.uid = firstname[0:1] + lastname[0:1] + str(randint(0,9))
 
 
-	def fulldetails(self):
-		return self.name() + ' ' + self.person_type + ' ' + self.getstatedict(self.living_space) + ' ' + self.getstatedict(self.is_allocated)
+	def full_details(self):
+		return self.name() + ' ' + self.person_type + ' ' + self.get_state_dict(self.living_space) + ' ' + self.get_state_dict(self.is_allocated)
 
 
-	def getdetailsdict(self):
+	def get_details_dict(self):
 		return {
 		'firstname':self.firstname,
 		'lastname':self.lastname,
@@ -35,7 +35,7 @@ class Person(Db,FileMan):
 		'person_type':self.person_type,
 		}
 
-	def getstatedict(self,state):
+	def get_state_dict(self,state):
 		"""returns corresponding value in state_dict """
 		try:
 			return self.state_dict[state]
@@ -53,7 +53,7 @@ class Person(Db,FileMan):
 
 	def allocate(self):
 		file = FileMan('rooms.pkl')
-		rooms = file.pickleload()
+		rooms = file.pickle_load()
 		if not rooms:
 			print 'No room available'
 			return False
