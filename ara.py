@@ -37,6 +37,7 @@ func_map = [
   'load_state',
   'list_people',
   'list_rooms',
+  'allocate_person',
 ]
 
 if __name__ == '__main__':
