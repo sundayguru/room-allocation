@@ -69,7 +69,7 @@ class Amity(FileMan):
 			if room.allocate(person):
 				person.is_allocated = True
 				person.assigned_room = room.name
-				print 'Person allocated to '+ room.name
+				print person.name() + ' allocated to '+ room.name
 				return True 
 		else:
 			print room_name + ' room is not available'
@@ -90,6 +90,8 @@ class Amity(FileMan):
 		self.remove()
 		self.setfilelocation('rooms.pkl')
 		self.remove()
+		self.people = []
+		self.rooms = []
 		 
 	def run_command(self,args):
 		method = getattr(self,self.command)
@@ -319,17 +321,25 @@ class Amity(FileMan):
 		  	self.save_state_to_pickle()
 		  	self.list_people()
 
+	def get_db_name(self,args):
+		db_name = 'amity'
+		if args['--db']:
+			db_name = args['--db']
+
+		return db_name
+
 	def save_state(self,args):
-		migrate = Migration()
+		db_name = self.get_db_name(args)
+		migrate = Migration(db_name)
 		if self.settings['drop_db']:
 			migrate.drop()
 			self.settings['drop_db'] = False
 			self.setfilelocation('config.pkl')
-			self.pickledump()
+			self.pickledump(self.settings)
 
 		migrate.install()
-		self.save_room_state()
-		self.save_people_state()
+		self.save_room_state(db_name)
+		self.save_people_state(db_name)
 
 	def save_room_state(self,db_name = 'amity'):
 		if len(self.rooms) == 0:
@@ -377,6 +387,7 @@ class Amity(FileMan):
 		else:
 			person = Staff(str(row['firstname']),str(row['lastname']),living_space)
 
+		person.assigned_room = row['assigned_room']
 		return person
 
 	def load_people_state(self,db_name = 'amity'):
@@ -410,6 +421,7 @@ class Amity(FileMan):
 
 	def load_state(self,args):
 		"""loads people and room records from sqlite database and save it to a pickle file"""
+		db_name = self.get_db_name(args)
 		if len(self.people) != 0 or len(self.rooms) != 0:
 			Util.printline('You have unsaved changes')
 			answer = Util.prompt('do you wish to discard? Y/N ')
@@ -417,9 +429,9 @@ class Amity(FileMan):
 				return False
 
 		self.drop_pickle_files()
-		self.load_room_state()
-		self.load_people_state()
-		self.setting['drop_db'] = True
+		self.load_room_state(db_name)
+		self.load_people_state(db_name)
+		self.settings['drop_db'] = True
 		self.save_state_to_pickle()
 
 
