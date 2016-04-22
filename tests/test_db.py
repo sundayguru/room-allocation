@@ -21,7 +21,7 @@ class TestDb(unittest.TestCase):
 		'lastname':'Nwuguru',
 		'allocation':1
 		}
-		res = self.db.prepareinsert(data)
+		res = self.db.prepare_insert(data)
 		self.assertEqual(res, {'column': 'allocation,lastname,firstname', 'place_holders':':allocation,:lastname,:firstname'})
 
 
@@ -33,8 +33,8 @@ class TestDb(unittest.TestCase):
 		}
 		self.db.table_name = 'fellow'
 		self.db.create(data)
-		self.assertEqual(self.db.errormessage, '')
-		id = self.db.lastid()
+		self.assertEqual(self.db.error_message, '')
+		id = self.db.last_id()
 		self.db.find(id)
 		self.assertEqual(self.db.firstname, 'sunday')
 
@@ -46,9 +46,9 @@ class TestDb(unittest.TestCase):
 		}
 		self.db.table_name = 'fellow'
 		self.db.create(data)
-		id = self.db.lastid()
+		id = self.db.last_id()
 		res = self.db.find(id)
-		self.assertEqual(self.db.errormessage, '')
+		self.assertEqual(self.db.error_message, '')
 		self.assertEqual(res['firstname'], 'sunday')
 
 	def test_db_findall(self):
@@ -59,8 +59,8 @@ class TestDb(unittest.TestCase):
 		}
 		self.db.table_name = 'fellow'
 		self.db.create(data)
-		res = self.db.findall()
-		self.assertEqual(self.db.errormessage, '')
+		res = self.db.find_all()
+		self.assertEqual(self.db.error_message, '')
 		self.assertNotEqual(len(res), 0)
 
 
@@ -72,11 +72,11 @@ class TestDb(unittest.TestCase):
 		}
 		self.db.table_name = 'fellow'
 		self.db.create(data)
-		res = self.db.findbyattr({'firstname':'sunday','allocation':1},'AND')
-		self.assertEqual(self.db.errormessage, '')
+		res = self.db.find_by_attr({'firstname':'sunday','allocation':1},'AND')
+		self.assertEqual(self.db.error_message, '')
 		self.assertNotEqual(len(res), 0)
 
-	def test_db_setattr(self):
+	def test_db_set_attr(self):
 		data = {
 		'firstname':'sunday',
 		'lastname':'Nwuguru',
@@ -85,28 +85,28 @@ class TestDb(unittest.TestCase):
 		self.db.table_name = 'fellow'
 		self.db.create(data)
 		res = self.db.find(1)
-		self.assertEqual(self.db.errormessage, '')
+		self.assertEqual(self.db.error_message, '')
 		self.assertEqual(self.db.firstname, data['firstname'])
 
-	def test_db_prepareupdate(self):
+	def test_db_prepare_update(self):
 		data = {
 		'firstname':'sunday',
 		'lastname':'Nwuguru'
 		}
-		res = self.db.prepareupdate(data)
+		res = self.db.prepare_update(data)
 		self.assertEqual(res, 'lastname = :lastname,firstname = :firstname')
 
-	def test_db_prepareattr(self):
+	def test_db_prepare_attr(self):
 		data = {
 		'firstname':'sunday',
 		'lastname':'Nwuguru'
 		}
-		res = self.db.prepareattr(data,'AND')
+		res = self.db.prepare_attr(data,'AND')
 		self.assertEqual(res, 'lastname = :lastname AND firstname = :firstname')
 
 
-	def test_db_validateid(self):
-		res = self.db.validateid(None)
+	def test_db_validate_id(self):
+		res = self.db.validate_id(None)
 		self.assertEqual(res, False)
 
 	def test_db_update_without_id(self):
@@ -126,11 +126,11 @@ class TestDb(unittest.TestCase):
 
 		self.db.table_name = 'fellow'
 		self.db.create(data)
-		id = self.db.lastid()
+		id = self.db.last_id()
 		self.db.find(id)
 		data['firstname'] = 'david'
 		self.db.update(data)
-		self.assertEqual(self.db.errormessage, '')
+		self.assertEqual(self.db.error_message, '')
 		self.db.find(id)
 		self.assertEqual(self.db.firstname, 'david')
 
@@ -144,10 +144,10 @@ class TestDb(unittest.TestCase):
 
 		self.db.table_name = 'fellow'
 		self.db.create(data)
-		id = self.db.lastid()
+		id = self.db.last_id()
 		data['firstname'] = 'david'
 		self.db.update(data,id)
-		self.assertEqual(self.db.errormessage, '')
+		self.assertEqual(self.db.error_message, '')
 		self.db.find(id)
 		self.assertEqual(self.db.firstname, 'david')
 

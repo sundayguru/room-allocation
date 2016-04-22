@@ -21,7 +21,6 @@ class Amity(FileMan):
 		self.load_people_from_pickle()
 		self.load_rooms()
 		self.load_settings()
-		print Util.getbasepath()
 
 	def load_people_from_pickle(self):
 		"""loads people from pickle file"""
