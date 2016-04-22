@@ -18,7 +18,7 @@ class Room(Db,FileMan):
 
 	def allocate(self,person):
 		
-		if not self.allocateAble(person):
+		if not self.allocate_able(person):
 			self.error_message = person.name() + ' cannot be allocated to ' + self.name
 			return False
 
@@ -40,11 +40,11 @@ class Room(Db,FileMan):
 		
 		data += members[:-2] + '\n'
 		
-		return data if not output else Util.printline(data)
+		return data if not output else Util.print_line(data)
 
 
 
-	def allocateAble(self,person):
+	def allocate_able(self,person):
 		if(person.person_type == 'STAFF' and self.room_type == 'OFFICE'):
 			return True
 		elif(person.person_type == 'FELLOW' and self.room_type == 'LIVINGSPACE'):
