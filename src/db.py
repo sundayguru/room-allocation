@@ -3,7 +3,7 @@ from os import path
 from datetime import datetime
 
 class Db(object):
-	"""Database manipulation"""
+	"""Sqlite3 database manipulation"""
 
 	name = 'amity'
 	table_name = 'table_name'
@@ -19,11 +19,13 @@ class Db(object):
 		self.db_location = root+'/'+name+'.db'
 
 	def __db_open(self):
+		"""creates sqlite database connection"""
 		self.connection = sqlite3.connect(self.db_location)
 		#this will allow us to access the query result via the column name
 		self.connection.row_factory = sqlite3.Row
 
 	def __db_close(self):
+		"""closes sqlite database connection"""
 		self.connection.close()
 
 	def execute(self, sql, params = {}, commit = False):
