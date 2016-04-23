@@ -17,7 +17,11 @@ Usage:
 
 Options:
   -h --help     Show this screen.
-  -w            wants accomodation
+  -w            Wants accomodation
+  -u            Unallocated
+  -r            Rooms
+  -a            Allocated
+  -o            Output file name
 
 """
 from docopt import docopt
