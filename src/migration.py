@@ -32,6 +32,7 @@ class Migration(Db):
 		
 
 	def install(self):
+		"""creates required tables as defined in table_definitions if it has not been created"""
 		for index,sql in enumerate(self.table_definitions):
 			try:
 				if self.execute(sql):
@@ -43,6 +44,7 @@ class Migration(Db):
 
 	
 	def drop(self):
+		"""drops all tables from database as specified in tables class variable"""
 		for table in self.tables:
 			try:
 				if self.execute('DROP TABLE '+table+';'):

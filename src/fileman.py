@@ -18,10 +18,8 @@ class FileMan(object):
 
 
 	def read(self):
-		"""
-		reads a file and return content in a list
-		returns False is path is not a file
-		"""
+		"""reads a file and return content in a list.
+		returns False if path is not a file"""
 		if not self.validate():
 			return False
 
