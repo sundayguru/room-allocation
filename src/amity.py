@@ -149,7 +149,7 @@ class Amity(FileMan):
 				if len(room.people) == 0:
 					continue
 
-			print index,room.nameplate(), str(len(room.people)) + ' people'
+			print index + 1,room.nameplate(), str(len(room.people)) + ' people'
 			Util.print_divider()
 
 	def print_allocations(self,args):
