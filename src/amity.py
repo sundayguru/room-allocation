@@ -408,6 +408,7 @@ class Amity(FileMan):
 			person = Staff(str(row['firstname']),str(row['lastname']),living_space)
 
 		person.assigned_room = row['assigned_room']
+		person.date_time = row['date_time']
 		return person
 
 	def load_people_state(self,db_name = 'amity'):
