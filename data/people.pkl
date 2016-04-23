@@ -20,7 +20,7 @@ p9
 I01
 sS'uid'
 p10
-S'OS7'
+S'OS0'
 p11
 sS'firstname'
 p12
@@ -51,7 +51,7 @@ p23
 sg9
 I00
 sg10
-S'DW2'
+S'DW8'
 p24
 sg12
 S'DOMINIC'
@@ -76,7 +76,7 @@ p31
 sg9
 I01
 sg10
-S'SP0'
+S'SP5'
 p32
 sg12
 S'SIMON'
@@ -101,7 +101,7 @@ p39
 sg9
 I01
 sg10
-S'ML9'
+S'ML5'
 p40
 sg12
 S'MARI'
@@ -126,7 +126,7 @@ p47
 sg9
 I00
 sg10
-S'LR4'
+S'LR6'
 p48
 sg12
 S'LEIGH'
@@ -151,7 +151,7 @@ p55
 sg9
 I01
 sg10
-S'TL2'
+S'TL8'
 p56
 sg12
 S'TANA'
@@ -176,7 +176,7 @@ p63
 sg9
 I00
 sg10
-S'KM3'
+S'KM7'
 p64
 sg12
 S'KELLY'
@@ -201,7 +201,7 @@ p71
 sg9
 I01
 sg10
-S'SA1'
+S'SA6'
 p72
 sg12
 S'SEYI'
@@ -226,7 +226,7 @@ p79
 sg9
 I01
 sg10
-S'JA9'
+S'JA4'
 p80
 sg12
 S'JOHN'
@@ -251,7 +251,7 @@ p87
 sg9
 I00
 sg10
-S'JS5'
+S'JS1'
 p88
 sg12
 S'JOHN'
@@ -274,7 +274,7 @@ p95
 sg9
 I01
 sg10
-S'LE9'
+S'LE6'
 p96
 sg12
 S'LION'
@@ -285,6 +285,6 @@ p98
 sg16
 I01
 sg17
-S'IROKO'
+S'CEDAR'
 p99
 sba.
