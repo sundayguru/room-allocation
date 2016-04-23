@@ -112,7 +112,6 @@ class Amity(FileMan):
 	  	print person.name() + ' successfully created'
 	  	self.allocate(person)
 	  	self.save_state_to_pickle()
-	  	self.list_people()
 
 	def list_people(self,args):
 		"""displays the list of available people based on options specified (-u or -a)"""
@@ -134,7 +133,7 @@ class Amity(FileMan):
 			print (index + 1),person.uid,person.full_details()
 			Util.print_divider()
 
-	def list_rooms(self,args = {}):
+	def list_rooms(self,args):
 		"""displays the list of available rooms"""
 		Util.print_two_line('LIST OF AVAILABLE ROOMS')
 		if len(self.rooms) == 0:
@@ -142,7 +141,15 @@ class Amity(FileMan):
 			return False
 
 		for index,room in enumerate(self.rooms):
-			print index,room.nameplate()
+			if args['-u']:
+				if len(room.people) != 0:
+					continue
+
+			if args['-a']:
+				if len(room.people) == 0:
+					continue
+
+			print index,room.nameplate(), str(len(room.people)) + ' people'
 			Util.print_divider()
 
 	def print_allocations(self,args):
@@ -275,7 +282,6 @@ class Amity(FileMan):
 		person = self.get_person_by_uid(person_id)
 		if not person:
 			print 'no person with ID: ' + person_id
-			self.list_people()
 			return False
 
 		if not person.is_allocated:
@@ -302,7 +308,6 @@ class Amity(FileMan):
 		person = self.get_person_by_uid(person_id)
 		if not person:
 			print 'no person with ID: ' + person_id
-			self.list_people()
 			return False
 
 		if person.is_allocated:
@@ -366,7 +371,6 @@ class Amity(FileMan):
 			  	print 'person created'
 			  	self.allocate(person)
 		  	self.save_state_to_pickle()
-		  	self.list_people()
 
 	def get_db_name(self,args):
 		"""return specified db name from arguments if available.
@@ -459,8 +463,6 @@ class Amity(FileMan):
 				person.is_allocated = True
 
 			self.people.append(person)
-
-		self.list_people()
 
 	def save_people_state(self,db_name = 'amity'):
 		"""saves people state to sqlite db"""
