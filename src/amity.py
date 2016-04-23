@@ -114,8 +114,8 @@ class Amity(FileMan):
 	  	self.save_state_to_pickle()
 	  	self.list_people()
 
-	def list_people(self,args = {}):
-		"""displays the list of available person"""
+	def list_people(self,args):
+		"""displays the list of available people based on options specified (-u or -a)"""
 		Util.print_two_line('LIST OF AVAILABLE PEOPLE')
 		if len(self.people) == 0:
 			Util.print_line('No person found')
@@ -123,6 +123,14 @@ class Amity(FileMan):
 
 		Util.print_two_line('S/N -> ID -> Firstname -> Lastname -> Type -> Living Space -> Allocated -> datetime')
 		for index,person in enumerate(self.people):
+			if args['-u']:
+				if len(person.assigned_room) != 0:
+					continue
+
+			if args['-a']:
+				if len(person.assigned_room) == 0:
+					continue
+
 			print (index + 1),person.uid,person.full_details()
 			Util.print_divider()
 

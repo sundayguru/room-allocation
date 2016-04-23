@@ -11,8 +11,8 @@ Usage:
   ara print_room <name_of_room>
   ara save_state [--db=sqlite_database]
   ara load_state [--db=sqlite_database]
-  ara list_people [-u]
-  ara list_rooms [-u]
+  ara list_people [-u | -a]
+  ara list_rooms [-u | -a]
 
 
 Options:
