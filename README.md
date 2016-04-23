@@ -61,5 +61,5 @@ One stop solution for room allocation management
 
 - Fork Repo
 - Create new branch and add your contribution
-- push to your branch
-- raise a pull request
+- Push to your branch
+- Raise a pull request
