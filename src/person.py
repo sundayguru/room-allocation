@@ -79,4 +79,8 @@ class Person(Db,FileMan):
 	def save(self):
 		"""Saves person into sqlite database"""
 		data = self.get_details_dict()
+		exists = self.find_by_attr({'firstname':data['firstname'],'lastname':data['lastname'],'person_type':data['person_type']})
+		if exists:
+			return False
+			
 		return self.create(data)

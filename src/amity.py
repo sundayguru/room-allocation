@@ -424,6 +424,8 @@ class Amity(FileMan):
 			room.set_db(db_name)
 			if room.save():
 				Util.print_line(room.name + ' save!')
+			else:
+				Util.print_line(room.name + ' already exists')
 
 		self.set_file_location('rooms.pkl')
 		self.remove()
@@ -449,8 +451,7 @@ class Amity(FileMan):
 					person = self.get_person(item)
 					room.allocate(person)
 			self.rooms.append(room)
-
-		self.list_rooms()
+		return True
 
 	def get_person(self,row):
 		"""creates person instance based on person type"""
@@ -481,6 +482,7 @@ class Amity(FileMan):
 				person.is_allocated = True
 
 			self.people.append(person)
+		return True
 
 	def save_people_state(self,db_name = 'amity'):
 		"""saves people state to sqlite db"""
@@ -492,6 +494,8 @@ class Amity(FileMan):
 			person.set_db(db_name)
 			if person.save():
 				Util.print_line(person.name() + ' save!')
+			else:
+				Util.print_line(person.name() + ' already exists')
 
 		self.set_file_location('people.pkl')
 		self.remove()
@@ -506,10 +510,12 @@ class Amity(FileMan):
 				return False
 
 		self.drop_pickle_files()
-		self.load_room_state(db_name)
-		self.load_people_state(db_name)
-		self.settings['drop_db'] = True
-		self.save_state_to_pickle()
+		if self.load_room_state(db_name) and self.load_people_state(db_name):
+			self.settings['drop_db'] = True
+			self.save_state_to_pickle()
+			Util.print_line('Data loaded')
+		
+		
 
 
 

@@ -71,4 +71,7 @@ class Room(Db,FileMan):
 		'type':self.room_type,
 		'allocated':len(self.people),
 		}
+		exists = self.find_by_attr({'name':data['name'],'type':data['type']})
+		if exists:
+			return False
 		return self.create(data)
