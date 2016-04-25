@@ -111,6 +111,9 @@ class Db(object):
 
 	def __db_set_attr(self,result):
 		"""dynamic sets properties based on returned result"""
+		if not result:
+			return False
+
 		for key in result.keys():
 			self.__dict__[key] = result[key]
 
@@ -149,6 +152,7 @@ class Db(object):
 	def last_id(self):
 		"""returns the id of the last record in a table"""
 		allrows  = self.find_all()
+		print allrows[len(allrows) - 1]['id']
 		return allrows[len(allrows) - 1]['id']
 
 
