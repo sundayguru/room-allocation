@@ -243,7 +243,7 @@ class Amity(FileMan):
 		records = ''
 		for room in self.rooms:
 			if len(room.people) != 0 and allocated:
-				records += room.people_list_with_room_name(False)
+				records += room.people_list_with_room_name(False) + '\n'
 			elif not allocated and len(room.people) == 0:
 				records += room.nameplate() + '\n'
 
