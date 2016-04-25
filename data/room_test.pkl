@@ -1,6 +1,0 @@
-(dp0
-S'name'
-p1
-S'iroko'
-p2
-s.
