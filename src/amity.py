@@ -108,9 +108,12 @@ class Amity(FileMan):
 	  	else:
 	  		person = Staff(firstname,lastname,args['-w'])
 
-	  	self.people.append(person)
-	  	print person.name() + ' successfully created'
-	  	self.allocate(person)
+	  	if self.person_exists(person):
+	  		Util.print_line(person.name() + ' already exists')
+	  	else:
+	  		self.people.append(person)
+	  		print person.name() + ' successfully created'
+	  		self.allocate(person)
 	  	self.save_state_to_pickle()
 
 	def list_people(self,args):
@@ -270,10 +273,25 @@ class Amity(FileMan):
 			  room = Office(name.upper())
 			else:
 			  room = LivingSpace(name.upper())
-			self.rooms.append(room)
-			print room.name + ' successful created'
+
+			if self.room_exists(room):
+				Util.print_line(room.name + ' already exists')
+			else:
+				self.rooms.append(room)
+				print room.name + ' successful created'
 		self.save_state_to_pickle()
-		self.list_rooms()
+
+	def room_exists(self,room):
+		for old_room in self.rooms:
+			if old_room.name == room.name:
+				return True
+		return False
+
+	def person_exists(self,person):
+		for old_person in self.people:
+			if old_person.name() == person.name():
+				return True
+		return False
 
 	def reallocate_person(self,args):
 		"""reallocate person from one room to another"""
