@@ -34,7 +34,11 @@ class Util(object):
 
 	@staticmethod
 	def print_divider():
-		print '---------------------------------------------------------------------------'
+		print Util.line()
+	
+	@staticmethod
+	def line():
+		return '---------------------------------------------------------------------------\n'
 	
 	@staticmethod
 	def welcome():

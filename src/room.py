@@ -35,7 +35,8 @@ class Room(Db,FileMan):
 	def people_list_with_room_name(self,output = True):
 		"""build data of room details and the people allocated to it.
 		returns the data or outputs it if output parameter is set to True"""
-		data = self.nameplate() + '\n'
+		data = self.nameplate() + ' ' + str(len(self.people)) + ' of ' + str(self.capacity) +'\n'
+		data += Util.line()
 		members = ''
 		for person in self.people:
 			members += person.name() + ', '
