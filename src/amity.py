@@ -6,6 +6,7 @@ from src.fileman import FileMan
 from src.util import Util
 from src.migration import Migration
 from src.db import Db
+from random import randint
 
 class Amity(FileMan):
 	"""This is the entry point of the application"""
@@ -48,6 +49,12 @@ class Amity(FileMan):
 			rooms = []
 		self.rooms = rooms
 	
+	def get_unallocated_rooms_by_type(self,room_type):
+		return [room for room in self.rooms if room.room_type.lower() == room_type.lower() and len(room.people) < room.capacity ]
+
+	def get_unallocated_room_by_name(self,room_name):
+		return [room for room in self.rooms if room.name.lower() == room_name.lower() and len(room.people) < room.capacity ]
+
 	def allocate(self,person,room_name = None):
 		"""allocates person to a room based on room_name, exception_room or random"""
 
@@ -57,23 +64,37 @@ class Amity(FileMan):
 		if len(self.rooms) == 0:
 			print 'No room available'
 			return False
-		for room in self.rooms:
-			if room.name == self.exception_room:
-				continue
 
-			if room_name != None:
-				if room.name.lower() != room_name.lower():
-					continue
+		if room_name != None:
+			available_rooms = self.get_unallocated_room_by_name(room_name)
+			if len(available_rooms) == 0:
+				Util.print_line(room_name + ' is not available')
+				return False
 
-			if room.allocate(person):
-				person.is_allocated = True
-				person.assigned_room = room.name
-				print person.name() + ' allocated to '+ room.name
-				return True 
+			selected_room = available_rooms[0]
 		else:
-			print room_name + ' room is not available'
-			return False
-	
+			room_type = "office" if person.person_type == 'STAFF' else 'LivingSpace'
+			available_rooms = self.get_unallocated_rooms_by_type(room_type)
+
+			if len(available_rooms) == 0:
+				Util.print_line(' No available room')
+				return False
+
+			random = randint(0,len(available_rooms) - 1)
+			selected_room = available_rooms[random]
+			if selected_room.name == self.exception_room:
+				available_rooms.pop(random) #remove the selected room from available rooms
+				random = randint(0,len(available_rooms) - 1)
+				selected_room = available_rooms[random]
+
+		if selected_room.allocate(person):
+			person.is_allocated = True
+			person.assigned_room = selected_room.name
+			print person.name() + ' allocated to '+ selected_room.name
+			return True
+		else:
+			Util.print_line('Unable to locate '+ person.name() + ' to '+ selected_room.name)
+
 	def save_state_to_pickle(self):
 		"""save current state to pickle file"""
 		self.set_file_location('people.pkl')
@@ -108,9 +129,12 @@ class Amity(FileMan):
 	  	else:
 	  		person = Staff(firstname,lastname,args['-w'])
 
-	  	self.people.append(person)
-	  	print person.name() + ' successfully created'
-	  	self.allocate(person)
+	  	if self.person_exists(person):
+	  		Util.print_line(person.name() + ' already exists')
+	  	else:
+	  		self.people.append(person)
+	  		print person.name() + ' successfully created'
+	  		self.allocate(person)
 	  	self.save_state_to_pickle()
 
 	def list_people(self,args):
@@ -240,7 +264,7 @@ class Amity(FileMan):
 		records = ''
 		for room in self.rooms:
 			if len(room.people) != 0 and allocated:
-				records += room.people_list_with_room_name(False)
+				records += room.people_list_with_room_name(False) + '\n'
 			elif not allocated and len(room.people) == 0:
 				records += room.nameplate() + '\n'
 
@@ -270,10 +294,25 @@ class Amity(FileMan):
 			  room = Office(name.upper())
 			else:
 			  room = LivingSpace(name.upper())
-			self.rooms.append(room)
-			print room.name + ' successful created'
+
+			if self.room_exists(room):
+				Util.print_line(room.name + ' already exists')
+			else:
+				self.rooms.append(room)
+				print room.name + ' successful created'
 		self.save_state_to_pickle()
-		self.list_rooms()
+
+	def room_exists(self,room):
+		for old_room in self.rooms:
+			if old_room.name == room.name:
+				return True
+		return False
+
+	def person_exists(self,person):
+		for old_person in self.people:
+			if old_person.name() == person.name():
+				return True
+		return False
 
 	def reallocate_person(self,args):
 		"""reallocate person from one room to another"""
@@ -406,6 +445,8 @@ class Amity(FileMan):
 			room.set_db(db_name)
 			if room.save():
 				Util.print_line(room.name + ' save!')
+			else:
+				Util.print_line(room.name + ' already exists')
 
 		self.set_file_location('rooms.pkl')
 		self.remove()
@@ -431,8 +472,7 @@ class Amity(FileMan):
 					person = self.get_person(item)
 					room.allocate(person)
 			self.rooms.append(room)
-
-		self.list_rooms()
+		return True
 
 	def get_person(self,row):
 		"""creates person instance based on person type"""
@@ -463,6 +503,7 @@ class Amity(FileMan):
 				person.is_allocated = True
 
 			self.people.append(person)
+		return True
 
 	def save_people_state(self,db_name = 'amity'):
 		"""saves people state to sqlite db"""
@@ -474,6 +515,8 @@ class Amity(FileMan):
 			person.set_db(db_name)
 			if person.save():
 				Util.print_line(person.name() + ' save!')
+			else:
+				Util.print_line(person.name() + ' already exists')
 
 		self.set_file_location('people.pkl')
 		self.remove()
@@ -488,10 +531,12 @@ class Amity(FileMan):
 				return False
 
 		self.drop_pickle_files()
-		self.load_room_state(db_name)
-		self.load_people_state(db_name)
-		self.settings['drop_db'] = True
-		self.save_state_to_pickle()
+		if self.load_room_state(db_name) and self.load_people_state(db_name):
+			self.settings['drop_db'] = True
+			self.save_state_to_pickle()
+			Util.print_line('Data loaded')
+		
+		
 
 
 
