@@ -6,6 +6,7 @@ from src.fileman import FileMan
 from src.util import Util
 from src.migration import Migration
 from src.db import Db
+from random import randint
 
 class Amity(FileMan):
 	"""This is the entry point of the application"""
@@ -48,6 +49,12 @@ class Amity(FileMan):
 			rooms = []
 		self.rooms = rooms
 	
+	def get_unallocated_rooms_by_type(self,room_type):
+		return [room for room in self.rooms if room.room_type.lower() == room_type.lower() and len(room.people) < room.capacity ]
+
+	def get_unallocated_room_by_name(self,room_name):
+		return [room for room in self.rooms if room.name.lower() == room_name.lower() and len(room.people) < room.capacity ]
+
 	def allocate(self,person,room_name = None):
 		"""allocates person to a room based on room_name, exception_room or random"""
 
@@ -57,23 +64,37 @@ class Amity(FileMan):
 		if len(self.rooms) == 0:
 			print 'No room available'
 			return False
-		for room in self.rooms:
-			if room.name == self.exception_room:
-				continue
 
-			if room_name != None:
-				if room.name.lower() != room_name.lower():
-					continue
+		if room_name != None:
+			available_rooms = self.get_unallocated_room_by_name(room_name)
+			if len(available_rooms) == 0:
+				Util.print_line(room_name + ' is not available')
+				return False
 
-			if room.allocate(person):
-				person.is_allocated = True
-				person.assigned_room = room.name
-				print person.name() + ' allocated to '+ room.name
-				return True 
+			selected_room = available_rooms[0]
 		else:
-			print room_name + ' room is not available'
-			return False
-	
+			room_type = "office" if person.person_type == 'STAFF' else 'LivingSpace'
+			available_rooms = self.get_unallocated_rooms_by_type(room_type)
+
+			if len(available_rooms) == 0:
+				Util.print_line(' No available room')
+				return False
+
+			random = randint(0,len(available_rooms) - 1)
+			selected_room = available_rooms[random]
+			if selected_room.name == self.exception_room:
+				available_rooms.pop(random) #remove the selected room from available rooms
+				random = randint(0,len(available_rooms) - 1)
+				selected_room = available_rooms[random]
+
+		if selected_room.allocate(person):
+			person.is_allocated = True
+			person.assigned_room = selected_room.name
+			print person.name() + ' allocated to '+ selected_room.name
+			return True
+		else:
+			Util.print_line('Unable to locate '+ person.name() + ' to '+ selected_room.name)
+
 	def save_state_to_pickle(self):
 		"""save current state to pickle file"""
 		self.set_file_location('people.pkl')
