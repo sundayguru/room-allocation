@@ -11,7 +11,7 @@ from src.util import Util
 
 
 class Amity(FileMan):
-	"""This is the entry point of the application."""
+	"""This class holds all the methods executed from the commands, run_command method is the entry point of all the commands."""
 
 	def __init__(self, command):
 		Util.clear_screen()  # clears the terminal
@@ -535,7 +535,7 @@ class Amity(FileMan):
 
 	def load_state(self, args):
 		"""loads people and room records from sqlite database and save it to a pickle file"""
-		
+
 		db_name = self.get_db_name(args)
 		if len(self.people) != 0 or len(self.rooms) != 0:
 			Util.print_line('You have unsaved changes')

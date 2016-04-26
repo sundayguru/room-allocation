@@ -18,7 +18,7 @@ class Room(Db,FileMan):
 		self.is_filled = False
 
 	def allocate(self, person):
-		"""allocates person to a room"""
+		"""allocates person to a room."""
 
 		if not self.allocate_able(person):
 			self.error_message = person.name() + ' cannot be allocated to ' + self.name
@@ -36,7 +36,7 @@ class Room(Db,FileMan):
 
 	def people_list_with_room_name(self, output=True):
 		"""build data of room details and the people allocated to it.
-		returns the data or outputs it if output parameter is set to True"""
+		returns the data or outputs it if output parameter is set to True."""
 
 		data = self.nameplate() + ' ' + str(len(self.people)) + ' of ' + str(self.capacity) +'\n'
 		data += Util.line()
@@ -51,7 +51,7 @@ class Room(Db,FileMan):
 
 
 	def allocate_able(self, person):
-		"""checks if person can be allocated"""
+		"""checks if person can be allocated."""
 
 		if(person.person_type == 'STAFF' and self.room_type == 'OFFICE'):
 			return True
@@ -64,12 +64,12 @@ class Room(Db,FileMan):
 			return False
 
 	def nameplate(self):
-		"""returns room name and type as string"""
+		"""returns room name and type as string."""
 
 		return self.name + ' (' + self.room_type + ')'
 
 	def save(self):
-		"""saves rooms details o sqlite db"""
+		"""saves rooms details o sqlite db."""
 		
 		data = {
 		'name':self.name,

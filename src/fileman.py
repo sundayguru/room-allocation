@@ -3,6 +3,7 @@ from os import path
 import pickle
 from util import Util
 
+
 class FileMan(object):
 	"""FileMan reads and write to file"""
 
@@ -13,13 +14,14 @@ class FileMan(object):
 		self.set_file_location(file_name)
 
 
-	def set_file_location(self,file_name):
+	def set_file_location(self, file_name):
 		self.file_location = Util.get_base_path() + '/data/' + file_name
 
 
 	def read(self):
 		"""reads a file and return content in a list.
-		returns False if path is not a file"""
+		returns False if path is not a file."""
+
 		if not self.validate():
 			return False
 
@@ -29,8 +31,9 @@ class FileMan(object):
 				data.append(line[:-1])
 			return data
 
-	def write(self,data):
-		"""appends content to a file"""
+	def write(self, data):
+		"""appends content to a file."""
+
 		if type(data) != str:
 			raise ValueError
 
@@ -38,8 +41,9 @@ class FileMan(object):
 			file.read()
 			file.write(data+'\n')
 
-	def replace(self,data):
-		"""replaces content of a file"""
+	def replace(self, data):
+		"""replaces content of a file."""
+
 		if type(data) != str:
 			raise ValueError
 			
@@ -47,27 +51,31 @@ class FileMan(object):
 			file.write(data+'\n')
 
 	def remove(self):
-		"""deletes file"""
+		"""deletes file."""
+
 		if not self.validate():
 			return False
 
 		return os.remove(self.file_location)
 
 	def validate(self):
-		"""validates the existence of a give file location"""
+		"""validates the existence of a give file location."""
+
 		if not Util.is_file(self.file_location):
 			#Util.printline('make sure this file is in data folder')
 			return False
 		return True
 
-	def pickle_dump(self,data):
-		"""dumps data structure into a file"""
+	def pickle_dump(self, data):
+		"""dumps data structure into a file."""
+
 		with open(self.file_location,'wb') as file:
 			pickle.dump(data, file)
 		return True
 
 	def pickle_load(self):
-		"""load data structure from a file"""
+		"""load data structure from a file."""
+
 		if not self.validate():
 			return False
 

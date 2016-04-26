@@ -1,8 +1,9 @@
 import os
 import os.path
 
+
 class Util(object):
-	"""this class contains utility methods"""
+	"""This class contains utility methods."""
 
 	@staticmethod
 	def is_file(file_path):
