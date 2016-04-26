@@ -1,23 +1,25 @@
 from db import Db
-from person import Person
 from fileman import FileMan
+from person import Person
 from util import Util
-class Room(Db,FileMan):
-	""" room allocation """
-	capacity = 4
-	people = []
-	is_filled = False
-	error_message = ''
 
-	def __init__(self,name):
+
+class Room(Db,FileMan):
+	"""This class manages room entity, it include people attribute that holds the list people allocated to it."""
+
+	def __init__(self, name):
+
 		if type(name) != str:
 			raise ValueError
 
+		self.error_message = ''
 		self.name = name
 		self.people = []
+		self.is_filled = False
 
-	def allocate(self,person):
+	def allocate(self, person):
 		"""allocates person to a room"""
+
 		if not self.allocate_able(person):
 			self.error_message = person.name() + ' cannot be allocated to ' + self.name
 			return False
@@ -32,9 +34,10 @@ class Room(Db,FileMan):
 		self.people.append(person)
 		return True
 
-	def people_list_with_room_name(self,output = True):
+	def people_list_with_room_name(self, output=True):
 		"""build data of room details and the people allocated to it.
 		returns the data or outputs it if output parameter is set to True"""
+
 		data = self.nameplate() + ' ' + str(len(self.people)) + ' of ' + str(self.capacity) +'\n'
 		data += Util.line()
 		members = ''
@@ -47,8 +50,9 @@ class Room(Db,FileMan):
 
 
 
-	def allocate_able(self,person):
+	def allocate_able(self, person):
 		"""checks if person can be allocated"""
+
 		if(person.person_type == 'STAFF' and self.room_type == 'OFFICE'):
 			return True
 		elif(person.person_type == 'FELLOW' and self.room_type == 'LIVINGSPACE'):
@@ -61,10 +65,12 @@ class Room(Db,FileMan):
 
 	def nameplate(self):
 		"""returns room name and type as string"""
+
 		return self.name + ' (' + self.room_type + ')'
 
 	def save(self):
 		"""saves rooms details o sqlite db"""
+		
 		data = {
 		'name':self.name,
 		'capacity':self.capacity,
