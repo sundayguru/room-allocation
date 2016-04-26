@@ -60,20 +60,9 @@ class Person(Db,FileMan):
 		"""returns full name of the person"""
 		return self.firstname + ' ' + self.lastname
 
-	def allocate(self):
-		"""allocates person to a room from pickle file room data"""
-		file = FileMan('rooms.pkl')
-		rooms = file.pickle_load()
-		if not rooms:
-			print 'No room available'
-			return False
-		for room in rooms:
-			if room.allocate(self):
-				print 'Person allocated to '+ room.name
-				return True
-		else:
-			print 'No room available'
-			return False
+	def allocate(self,room_name):
+		self.is_allocated = True
+		self.assigned_room = room_name
 
 
 	def save(self):
@@ -84,3 +73,9 @@ class Person(Db,FileMan):
 			return False
 			
 		return self.create(data)
+
+	def is_fellow(self):
+		return self.person_type == 'FELLOW'
+
+	def is_staff(self):
+		return self.person_type == 'STAFF'

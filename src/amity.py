@@ -1,64 +1,55 @@
-from src.fellow import Fellow
-from src.staff import Staff
-from src.office import Office
-from src.livingspace import LivingSpace
-from src.fileman import FileMan
-from src.util import Util
-from src.migration import Migration
-from src.db import Db
 from random import randint
 
-class Amity(FileMan):
-	"""This is the entry point of the application"""
+from src.db import Db
+from src.fellow import Fellow
+from src.fileman import FileMan
+from src.livingspace import LivingSpace
+from src.migration import Migration
+from src.office import Office
+from src.staff import Staff
+from src.util import Util
 
-	rooms = [] #this will hold all available rooms
-	people = [] #this will hold all available person
-	exception_room = ''
-	setting = {'drop_db':False}
+
+class Amity(FileMan):
+	"""This is the entry point of the application."""
 
 	def __init__(self, command):
-		Util.clear_screen() #clears the terminal
+		Util.clear_screen()  # clears the terminal
 		self.command = command
-		self.load_people_from_pickle()
-		self.load_rooms()
-		self.load_settings()
+		self.people = self.load_people_from_pickle()
+		self.rooms = self.load_rooms()
+		self.settings = self.load_settings()
+		self.exception_room = ''
 
 	def load_people_from_pickle(self):
-		"""loads people from pickle file"""
-		
 		self.set_file_location('people.pkl')
 		people = self.pickle_load()
-		if not people:
-			people = []
-		self.people = people
+		return people if people else []
 		
 	def load_settings(self):
 		"""loads settings from pickle file"""
+
 		self.set_file_location('config.pkl')
 		settings = self.pickle_load()
-		if not settings:
-			settings = {'drop_db':False}
-		self.settings = settings
+		return settings if settings else {'drop_db': False}
 		
 	def load_rooms(self):
 		"""loads rooms from pickle file"""
 
 		self.set_file_location('rooms.pkl')
 		rooms = self.pickle_load()
-		if not rooms:
-			rooms = []
-		self.rooms = rooms
+		return rooms if rooms else []
 	
-	def get_unallocated_rooms_by_type(self,room_type):
-		return [room for room in self.rooms if room.room_type.lower() == room_type.lower() and len(room.people) < room.capacity ]
+	def get_unallocated_rooms_by_type(self, room_type):
+		return [room for room in self.rooms if room.room_type.lower() == room_type.lower() and not room.is_filled ]
 
 	def get_unallocated_room_by_name(self,room_name):
-		return [room for room in self.rooms if room.name.lower() == room_name.lower() and len(room.people) < room.capacity ]
+		return [room for room in self.rooms if room.name.lower() == room_name.lower() and not room.is_filled ]
 
-	def allocate(self,person,room_name = None):
+	def allocate(self, person, room_name=None):
 		"""allocates person to a room based on room_name, exception_room or random"""
 
-		if person.person_type == 'FELLOW' and person.living_space == False:
+		if person.is_fellow() and not person.living_space:
 			return False
 
 		if len(self.rooms) == 0:
@@ -73,7 +64,7 @@ class Amity(FileMan):
 
 			selected_room = available_rooms[0]
 		else:
-			room_type = "office" if person.person_type == 'STAFF' else 'LivingSpace'
+			room_type = "office" if person.is_staff() else 'LivingSpace'
 			available_rooms = self.get_unallocated_rooms_by_type(room_type)
 
 			if len(available_rooms) == 0:
@@ -83,13 +74,12 @@ class Amity(FileMan):
 			random = randint(0,len(available_rooms) - 1)
 			selected_room = available_rooms[random]
 			if selected_room.name == self.exception_room:
-				available_rooms.pop(random) #remove the selected room from available rooms
+				available_rooms.pop(random)  # remove the selected room from available rooms
 				random = randint(0,len(available_rooms) - 1)
 				selected_room = available_rooms[random]
 
 		if selected_room.allocate(person):
-			person.is_allocated = True
-			person.assigned_room = selected_room.name
+			person.allocate(selected_room.name)
 			print person.name() + ' allocated to '+ selected_room.name
 			return True
 		else:
