@@ -9,6 +9,7 @@ class Person(Db, FileMan):
 
 	state_dict = {0: 'NO', 1: 'YES'}
 	table_name = 'person'
+	date_time = ''
 
 	def __init__(self, firstname, lastname, living_space=False):
 		if type(firstname) != str or type(lastname) != str or type(living_space) != bool:
@@ -18,7 +19,6 @@ class Person(Db, FileMan):
 		self.lastname = lastname
 		self.living_space = living_space
 		self.assigned_room = ''
-		self.date_time = ''
 		self.is_allocated = False
 		self.uid = firstname[0:1] + lastname[0:1] + str(randint(0,9))
 
@@ -27,7 +27,7 @@ class Person(Db, FileMan):
 		"""returns person full details as string."""
 
 		details = self.name() + ' ' + self.person_type + ' ' + self.get_state_dict(self.living_space) 
-		details += ' ' + self.get_state_dict(self.is_allocated) + ' ' +self.date_time
+		details += ' ' + self.get_state_dict(self.is_allocated) + ' ' + self.date_time
 		return details
 
 
