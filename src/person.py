@@ -10,6 +10,7 @@ class Person(Db, FileMan):
 	state_dict = {0: 'NO', 1: 'YES'}
 	table_name = 'person'
 	date_time = ''
+	person_type = ''
 
 	def __init__(self, firstname, lastname, living_space=False):
 		if type(firstname) != str or type(lastname) != str or type(living_space) != bool:
