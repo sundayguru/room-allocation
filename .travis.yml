@@ -4,7 +4,8 @@ python:
 # command to install dependencies
 install:
   - "pip install --upgrade pip"
-  - "pip install python-coveralls"
+  #- "pip install python-coveralls"
+  - "pip install coveralls"
   - "pip install coverage"
   - "pip install codeclimate-test-reporter"
   #- "pip install -r requirements.txt"
@@ -14,4 +15,4 @@ script:
   - nosetests --with-coverage
 after-success:
   - coveralls
-  - codeclimate-test-reporter token = 78c1158ace8961fda85230cf32b5519c4c64d54e89b5541f6be72b48c6e01743
+  #- codeclimate-test-reporter token = 78c1158ace8961fda85230cf32b5519c4c64d54e89b5541f6be72b48c6e01743

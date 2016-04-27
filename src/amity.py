@@ -1,13 +1,13 @@
 from random import randint
 
-from src.db import Db
-from src.fellow import Fellow
-from src.fileman import FileMan
-from src.livingspace import LivingSpace
-from src.migration import Migration
-from src.office import Office
-from src.staff import Staff
-from src.util import Util
+from db import Db
+from fellow import Fellow
+from fileman import FileMan
+from livingspace import LivingSpace
+from migration import Migration
+from office import Office
+from staff import Staff
+from util import Util
 
 
 class Amity(FileMan):
