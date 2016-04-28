@@ -66,8 +66,8 @@ class Person(Db, FileMan):
 
 		return self.firstname + ' ' + self.lastname
 
-	def allocate(self, room_name):
-		self.is_allocated = True
+	def allocate(self, room_name, allocated = True):
+		self.is_allocated = allocated
 		self.assigned_room = room_name
 
 

@@ -56,27 +56,15 @@ class Amity(FileMan):
 			print 'No room available'
 			return False
 
-		if room_name != None:
-			available_rooms = self.get_unallocated_room_by_name(room_name)
-			if len(available_rooms) == 0:
-				Util.print_line(room_name + ' is not available')
-				return False
-
-			selected_room = available_rooms[0]
+		if room_name:
+			selected_room = self.select_room_by_name(room_name)
 		else:
 			room_type = "office" if person.is_staff() else 'LivingSpace'
-			available_rooms = self.get_unallocated_rooms_by_type(room_type)
+			selected_room = self.select_random_room(room_type)
 
-			if len(available_rooms) == 0:
-				Util.print_line(' No available room')
-				return False
-
-			random = randint(0,len(available_rooms) - 1)
-			selected_room = available_rooms[random]
-			if selected_room.name == self.exception_room:
-				available_rooms.pop(random)  # remove the selected room from available rooms
-				random = randint(0,len(available_rooms) - 1)
-				selected_room = available_rooms[random]
+		if not selected_room:
+			Util.print_line(room_name + ' is not available')
+			return False
 
 		if selected_room.allocate(person):
 			person.allocate(selected_room.name)
@@ -84,6 +72,26 @@ class Amity(FileMan):
 			return True
 		else:
 			Util.print_line('Unable to locate '+ person.name() + ' to '+ selected_room.name)
+
+	def select_room_by_name(self,room_name):
+		available_rooms = self.get_unallocated_room_by_name(room_name)
+		try:
+			return available_rooms[0]
+		except:
+			return False
+		
+	def select_random_room(self,room_type):
+		available_rooms = self.get_unallocated_rooms_by_type(room_type)
+		try:
+			random = randint(0,len(available_rooms) - 1)
+			selected_room = available_rooms[random]
+			if selected_room.name == self.exception_room:
+				available_rooms.pop(random)  # remove the selected room from available rooms
+				random = randint(0,len(available_rooms) - 1)
+				selected_room = available_rooms[random]
+			return selected_room
+		except:
+			return False
 
 	def save_state_to_pickle(self):
 		"""save current state to pickle file"""
@@ -345,6 +353,25 @@ class Amity(FileMan):
 		if not self.allocate(person,room_name):
 			if room:
 				room.allocate(person)
+
+		self.save_state_to_pickle()
+
+	def remove_person(self, args):
+		room_name = args['<current_room_name>'].upper()
+		person_id = args['<person_id>'].upper()
+		person = self.get_person_by_uid(person_id)
+		if not person:
+			print 'no person with ID: ' + person_id
+			return False
+
+		if not person.is_allocated:
+			print person.name() + ' has not been allocated to a room'
+			return False
+
+		room = self.remove_person_from_room(person)
+		if room:
+			person.living_space = False
+			person.allocate('', False)
 
 		self.save_state_to_pickle()
 
