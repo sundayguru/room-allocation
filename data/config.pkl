@@ -1,5 +1,5 @@
 (dp0
 S'drop_db'
 p1
-I01
+I00
 s.

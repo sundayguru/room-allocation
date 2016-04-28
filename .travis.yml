@@ -12,7 +12,8 @@ install:
 
 # command to run tests
 script:
-  - nosetests --with-coverage
+  # - nosetests --with-coverage
+  - coverage run -m unittest discover
 after-success:
   - coveralls
   #- codeclimate-test-reporter token = 78c1158ace8961fda85230cf32b5519c4c64d54e89b5541f6be72b48c6e01743
