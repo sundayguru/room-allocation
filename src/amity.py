@@ -338,8 +338,12 @@ class Amity(FileMan):
 			return False
 
 		room = self.remove_person_from_room(person)
+		if not room:
+			Util.print_line('Unable to find person in a room')
+			return False
+
 		if not self.allocate(person,room_name):
-			if room != False:
+			if room:
 				room.allocate(person)
 
 		self.save_state_to_pickle()
@@ -375,18 +379,17 @@ class Amity(FileMan):
 	def remove_person_from_room(self, person):
 		"""remove person from a room"""
 
-		for room in self.rooms:
-		  	if len(room.people) == 0:
-		  		continue
-
-		  	#check if the user exists in the room and remove it
+		available_rooms = self.get_unallocated_room_by_name(person.assigned_room)
+		if available_rooms:
+			room = available_rooms[0]
+			#check if the user exists in the room and remove it
 		  	for index,room_person in enumerate(room.people):
-		  		if room_person.uid == person.uid:
+		  		if room_person.name() == person.name():
 		  			room.people.pop(index)
 		  			self.exception_room = room.name
 		  			print person.name() + ' has been removed from ' +room.name
 		  			return room
-
+		
 		return False
 
 	def load_people(self, args):
