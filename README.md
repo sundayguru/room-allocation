@@ -4,7 +4,7 @@ Room Allocation
 One stop solution for room allocation management
 
 ### Badges
-<a href="https://codeclimate.com/github/andela-snwuguru/room-allocation/coverage"><img src="https://codeclimate.com/github/andela-snwuguru/room-allocation/badges/coverage.svg" /></a>
+[![Build Status](https://travis-ci.org/andela-snwuguru/room-allocation.svg?branch=master)](https://travis-ci.org/andela-snwuguru/room-allocation)
 
 ### Features
 
