@@ -3,6 +3,9 @@ Room Allocation
 
 One stop solution for room allocation management
 
+### Badges
+[![Build Status](https://travis-ci.org/andela-snwuguru/room-allocation.svg?branch=master)](https://travis-ci.org/andela-snwuguru/room-allocation)
+
 ### Features
 
 - Create rooms
