@@ -46,7 +46,7 @@ class Amity(FileMan):
 	def get_unallocated_room_by_name(self,room_name):
 		return [room for room in self.rooms if room.name.lower() == room_name.lower() and not room.is_filled ]
 
-	def allocate(self, person, room_name=None):
+	def allocate(self, person, room_name=None, room_type="LivingSpace"):
 		"""allocates person to a room based on room_name, exception_room or random"""
 
 		if person.is_fellow() and not person.living_space:
@@ -59,7 +59,8 @@ class Amity(FileMan):
 		if room_name:
 			selected_room = self.select_room_by_name(room_name)
 		else:
-			room_type = "office" if person.is_staff() else 'LivingSpace'
+
+			room_type = "office" if person.is_staff() else room_type
 			selected_room = self.select_random_room(room_type)
 
 		if not selected_room:
@@ -137,6 +138,8 @@ class Amity(FileMan):
 	  		self.people.append(person)
 	  		print person.name() + ' successfully created'
 	  		self.allocate(person)
+	  		if person.is_fellow():
+	  			self.allocate(person,None,'OFFICE')
 	  	self.save_state_to_pickle()
 
 	def list_people(self, args):

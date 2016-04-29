@@ -53,16 +53,11 @@ class Room(Db,FileMan):
 	def allocate_able(self, person):
 		"""checks if person can be allocated."""
 
-		if(person.person_type == 'STAFF' and self.room_type == 'OFFICE'):
-			return True
-		elif(person.person_type == 'FELLOW' and self.room_type == 'LIVINGSPACE'):
-			if(person.living_space == True):
-				return True
-
+		if(person.person_type == 'STAFF' and self.room_type == 'LIVINGSPACE'):
 			return False
-		else:
-			return False
-
+		
+		return True
+		
 	def nameplate(self):
 		"""returns room name and type as string."""
 
