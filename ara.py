@@ -3,7 +3,7 @@
 Usage:
   ara create_room (<room_name> <room_type>)...
   ara add_person (<firstname> <lastname> <person_type>) [-w]
-  ara reallocate_person <person_id> <new_room_name>
+  ara reallocate_person <person_id> <new_room_name> [-l]
   ara allocate_person <person_id> <new_room_name> [-w]
   ara remove_person <person_id> <current_room_name>
   ara load_people <file_location>
@@ -23,6 +23,7 @@ Options:
   -r            Rooms
   -a            Allocated
   -o            Output file name
+  -l            Living Space
 
 """
 from docopt import docopt

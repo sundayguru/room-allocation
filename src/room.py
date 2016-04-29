@@ -32,6 +32,7 @@ class Room(Db,FileMan):
 			return False
 			
 		self.people.append(person)
+		person.allocate(self)
 		return True
 
 	def people_list_with_room_name(self, output=True):
@@ -52,16 +53,18 @@ class Room(Db,FileMan):
 
 	def allocate_able(self, person):
 		"""checks if person can be allocated."""
+		if self.people:
+			for old_person in self.people:
+				if old_person.name() == person.name():
+					return False
 
-		if(person.person_type == 'STAFF' and self.room_type == 'OFFICE'):
-			return True
-		elif(person.person_type == 'FELLOW' and self.room_type == 'LIVINGSPACE'):
-			if(person.living_space == True):
-				return True
+		if(person.is_staff() and self.room_type == 'LIVINGSPACE'):
+			return False
 
+		if not person.living_space and person.is_fellow():
 			return False
-		else:
-			return False
+		
+		return True
 
 	def nameplate(self):
 		"""returns room name and type as string."""
@@ -69,7 +72,7 @@ class Room(Db,FileMan):
 		return self.name + ' (' + self.room_type + ')'
 
 	def save(self):
-		"""saves rooms details o sqlite db."""
+		"""saves rooms details to sqlite db."""
 		
 		data = {
 		'name':self.name,
