@@ -19,7 +19,7 @@ class Person(Db, FileMan):
 		self.firstname = firstname
 		self.lastname = lastname
 		self.living_space = living_space
-		self.assigned_room = ''
+		self.assigned_room = {}
 		self.is_allocated = False
 		self.uid = firstname[0:1] + lastname[0:1] + str(randint(0,9))
 
@@ -41,7 +41,7 @@ class Person(Db, FileMan):
 		'living_space':self.transalate(self.living_space),
 		'allocated':self.transalate(self.is_allocated),
 		'person_type':self.person_type,
-		'assigned_room':self.assigned_room,
+		'assigned_room':','.join(self.assigned_room.values()),
 		'date_time':self.date_time,
 		}
 
@@ -66,10 +66,9 @@ class Person(Db, FileMan):
 
 		return self.firstname + ' ' + self.lastname
 
-	def allocate(self, room_name, allocated = True):
+	def allocate(self, room, allocated=True):
 		self.is_allocated = allocated
-		self.assigned_room = room_name
-
+		self.assigned_room[room.room_type] = room.name
 
 	def save(self):
 		"""Saves person into sqlite database."""
