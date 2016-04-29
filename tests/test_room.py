@@ -54,11 +54,10 @@ class TestRoom(unittest.TestCase):
 		self.assertEqual(room.allocate(person), False)
 		self.assertEqual(room.people, [])
 		
-	def test_room_allocate_fails_when_person_type_is_fellow_and_room_type_is_O(self):
+	def test_room_allocate_returns_true_for_fellow_and_room_type_is_O(self):
 		room = Office('Iroko')
 		person = Fellow('Sunday','nwuguru',True)
-		self.assertEqual(room.allocate(person), False)
-		self.assertEqual(room.people, [])
+		self.assertEqual(room.allocate(person), True)
 		
 	def test_room_allocate_fails_when_person_type_is_staff_and_room_type_is_L(self):
 		room = LivingSpace('Iroko')
