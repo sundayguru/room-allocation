@@ -62,16 +62,14 @@ class Amity(FileMan):
 				Util.print_line(person.name() + ' cannot be allocated to ' + selected_room.name)
 				return False
 		else:
-
 			room_type = "office" if person.is_staff() else room_type
 			selected_room = self.select_random_room(room_type)
 
 		if not selected_room:
-			Util.print_line(room_name + ' is not available')
+			Util.print_line('Room is not available')
 			return False
 
 		if selected_room.allocate(person):
-			#person.allocate(selected_room)
 			Util.print_line(person.name() + ' allocated to '+ selected_room.name)
 			return True
 		else:
@@ -89,7 +87,7 @@ class Amity(FileMan):
 		try:
 			random = randint(0,len(available_rooms) - 1)
 			selected_room = available_rooms[random]
-			if selected_room.name == self.exception_room.name:
+			if self.exception_room and selected_room.name == self.exception_room.name:
 				available_rooms.pop(random)  # remove the selected room from available rooms
 				random = randint(0,len(available_rooms) - 1)
 				selected_room = available_rooms[random]
@@ -360,6 +358,7 @@ class Amity(FileMan):
 		if not self.allocate(person, room_name):
 			if room:
 				room.allocate(person)
+				Util.print_line(person.name() + ' has been moved back to ' + room.name)
 
 		self.save_state_to_pickle()
 
@@ -520,7 +519,7 @@ class Amity(FileMan):
 
 			if int(row['allocated']) > 0:
 				db.table_name = 'person'
-				people = db.find_by_attr({'assigned_room':room.name})
+				people = db.execute('SELECT * FROM person WHERE assigned_room LIKE "%'+ room.name +'%"')
 				for item in people:
 					person = self.get_person(item)
 					room.allocate(person)
@@ -539,7 +538,17 @@ class Amity(FileMan):
 		else:
 			person = Staff(str(row['firstname']),str(row['lastname']),living_space)
 
-		person.assigned_room = row['assigned_room']
+
+		if row['assigned_room']:
+			key_value_pairs = row['assigned_room'].split('=')
+			for i in xrange(len(key_value_pairs) - 1):
+				keys = key_value_pairs[i].split(',')
+				values = key_value_pairs[i + 1].split(',')
+				for index in xrange(len(keys)):
+					person.assigned_room[str(keys[index])] = str(values[index])
+
+		#person.assigned_room = row['assigned_room']
+
 		person.date_time = row['date_time']
 		return person
 
@@ -581,7 +590,7 @@ class Amity(FileMan):
 		"""loads people and room records from sqlite database and save it to a pickle file"""
 
 		db_name = self.get_db_name(args)
-		if len(self.people) != 0 or len(self.rooms) != 0:
+		if self.people or self.rooms:
 			Util.print_line('You have unsaved changes')
 			answer = Util.prompt('do you wish to discard? Y/N ')
 			if answer.upper() == 'N':

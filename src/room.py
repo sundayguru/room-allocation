@@ -69,7 +69,7 @@ class Room(Db,FileMan):
 		return self.name + ' (' + self.room_type + ')'
 
 	def save(self):
-		"""saves rooms details o sqlite db."""
+		"""saves rooms details to sqlite db."""
 		
 		data = {
 		'name':self.name,
