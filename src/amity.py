@@ -76,7 +76,7 @@ class Amity(FileMan):
 			Util.print_line(person.name() + ' allocated to '+ selected_room.name)
 			return True
 		else:
-			Util.print_line('Unable to locate '+ person.name() + ' to '+ selected_room.name)
+			Util.print_line('Unable to allocate '+ person.name() + ' to '+ selected_room.name)
 
 	def select_room_by_name(self,room_name):
 		available_rooms = self.get_unallocated_room_by_name(room_name)
@@ -142,9 +142,9 @@ class Amity(FileMan):
 	  	else:
 	  		self.people.append(person)
 	  		print person.name() + ' successfully created'
-	  		self.allocate(person)
+  			self.allocate(person,None,'OFFICE')
 	  		if person.is_fellow():
-	  			self.allocate(person,None,'OFFICE')
+	  			self.allocate(person)
 	  	self.save_state_to_pickle()
 
 	def list_people(self, args):

@@ -78,7 +78,7 @@ class Room(Db,FileMan):
 		if(person.is_staff() and self.room_type == 'LIVINGSPACE'):
 			return False
 
-		if not person.living_space and person.is_fellow():
+		if not person.living_space and person.is_fellow() and self.room_type == 'LIVINGSPACE':
 			return False
 		
 		return True
