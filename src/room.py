@@ -17,10 +17,10 @@ class Room(Db,FileMan):
 		self.people = []
 		self.is_filled = False
 
-	def allocate(self, person):
+	def allocate(self, person, validate_allocation=True):
 		"""allocates person to a room."""
 
-		if not self.allocate_able(person):
+		if not self.allocate_able(person) and validate_allocation:
 			self.error_message = person.name() + ' cannot be allocated to ' + self.name
 			return False
 

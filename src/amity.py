@@ -527,7 +527,7 @@ class Amity(FileMan):
 				people = db.execute('SELECT * FROM person WHERE assigned_room LIKE "%'+ room.name +'%"')
 				for item in people:
 					person = self.get_person(item)
-					room.allocate(person)
+					room.allocate(person,False)
 			self.rooms.append(room)
 		return True
 
