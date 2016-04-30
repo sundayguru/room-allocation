@@ -427,25 +427,14 @@ class Amity(FileMan):
 
 	def remove_person_from_room(self, person,room_type):
 		"""remove person from a room"""
-		available_rooms = []
-		for room_name in person.assigned_room.values():
-			room = self.get_unallocated_room_by_name(room_name)
-			if room:
-				available_rooms.append(room[0])
 
-		if available_rooms:
-			for room in available_rooms:
-				if room.room_type != room_type:
-					continue
+		room_name = person.assigned_room[room_type]
+		room = self.get_room_by_name(room_name)
+		if room:
+			if room[0].remove_person(person):
+				self.exception_room = room[0]
+				return room[0]
 
-				#check if the user exists in the room and remove it
-			  	for index,room_person in enumerate(room.people):
-			  		if room_person.name() == person.name():
-			  			room.people.pop(index)
-			  			self.exception_room = room
-			  			print person.name() + ' has been removed from ' +room.name
-			  			return room
-		
 		return False
 
 	def load_people(self, args):
