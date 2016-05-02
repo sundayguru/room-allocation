@@ -46,10 +46,13 @@ class Amity(FileMan):
 	def get_unallocated_room_by_name(self,room_name):
 		return [room for room in self.rooms if room.name.lower() == room_name.lower() and not room.is_filled ]
 
+	def get_room_by_name(self,room_name):
+		return [room for room in self.rooms if room.name.lower() == room_name.lower()]
+
 	def allocate(self, person, room_name=None, room_type="LivingSpace"):
 		"""allocates person to a room based on room_name, exception_room or random"""
 
-		if person.is_fellow() and not person.living_space:
+		if person.is_fellow() and not person.living_space and room_type == 'LivingSpace':
 			return False
 
 		if len(self.rooms) == 0:
@@ -73,7 +76,7 @@ class Amity(FileMan):
 			Util.print_line(person.name() + ' allocated to '+ selected_room.name)
 			return True
 		else:
-			Util.print_line('Unable to locate '+ person.name() + ' to '+ selected_room.name)
+			Util.print_line('Unable to allocate '+ person.name() + ' to '+ selected_room.name)
 
 	def select_room_by_name(self,room_name):
 		available_rooms = self.get_unallocated_room_by_name(room_name)
@@ -120,6 +123,7 @@ class Amity(FileMan):
 
 		method = getattr(self,self.command)
 		method(args)	
+		Util.print_divider()
 
 	def add_person(self, args):
 		"""resolves the argument and creates the right person type, 
@@ -138,9 +142,9 @@ class Amity(FileMan):
 	  	else:
 	  		self.people.append(person)
 	  		print person.name() + ' successfully created'
-	  		self.allocate(person)
+  			self.allocate(person,None,'OFFICE')
 	  		if person.is_fellow():
-	  			self.allocate(person,None,'OFFICE')
+	  			self.allocate(person)
 	  	self.save_state_to_pickle()
 
 	def list_people(self, args):
@@ -154,11 +158,11 @@ class Amity(FileMan):
 		Util.print_two_line('S/N -> ID -> Firstname -> Lastname -> Type -> Living Space -> Allocated -> datetime')
 		for index,person in enumerate(self.people):
 			if args['-u']:
-				if len(person.assigned_room) != 0:
+				if person.is_allocated:
 					continue
 
 			if args['-a']:
-				if len(person.assigned_room) == 0:
+				if not person.is_allocated:
 					continue
 
 			print (index + 1),person.uid,person.full_details()
@@ -253,7 +257,7 @@ class Amity(FileMan):
 			self.send_people_allocations_to_file(args['<file_name>'],False)
 		else:
 			for person in self.people:
-				if len(person.assigned_room) == 0:
+				if not person.is_allocated:
 					counter += 1
 					Util.print_line(person.full_details())
 
@@ -265,10 +269,9 @@ class Amity(FileMan):
 	def print_room(self, args):
 		"""displays the room details and the list of allocated person"""
 
-		for room in self.rooms:
-			if room.name.lower() == args['<name_of_room>'].lower():
-				room.people_list_with_room_name()
-				break
+		room = self.get_room_by_name(args['<name_of_room>'])
+		if room:
+			room[0].people_list_with_room_name()
 		else:
 			Util.print_line(args['<name_of_room>'] + ' room not found')
 
@@ -277,9 +280,9 @@ class Amity(FileMan):
 
 		records = ''
 		for room in self.rooms:
-			if len(room.people) != 0 and allocated:
+			if room.people and allocated:
 				records += room.people_list_with_room_name(False) + '\n'
-			elif not allocated and len(room.people) == 0:
+			elif not allocated and not room.people:
 				records += room.nameplate() + '\n'
 
 		self.set_file_location(file_name)
@@ -291,9 +294,9 @@ class Amity(FileMan):
 
 		records = ''
 		for person in self.people:
-			if len(person.assigned_room) != 0 and allocated:
+			if person.is_allocated and allocated:
 				records += person.full_details() + '\n'
-			elif not allocated and len(person.assigned_room) == 0:
+			elif not allocated and not person.is_allocated:
 				records += person.full_details() + '\n'
 
 		self.set_file_location(file_name)
@@ -374,10 +377,14 @@ class Amity(FileMan):
 			print person.name() + ' has not been allocated to a room'
 			return False
 
-		room = self.remove_person_from_room(person)
+		room = self.get_room_by_name(room_name)
 		if room:
-			person.living_space = False
-			person.allocate('', False)
+			if room[0].remove_person(person):
+				Util.print_line(person.name() + ' has been removed from ' + room[0].name)
+			else:
+				Util.print_line('Unable to remove '+ person.name())
+		else:
+			Util.print_line(room_name + ' not found')
 
 		self.save_state_to_pickle()
 
@@ -390,15 +397,23 @@ class Amity(FileMan):
 			print 'no person with ID: ' + person_id
 			return False
 
-		if person.is_allocated:
-			print person.name() + ' has been allocated to a room'
+		if person.is_allocated and len(person.assigned_room) > 1:
+			print person.name() + ' has been allocated to ' + (' and '.join(person.assigned_room.keys()))
 			return False
 
-		if args['-w']:
-			person.living_space = True
+		room = self.get_room_by_name(room_name)
+		if room:
+			if args['-w'] and person.is_fellow():
+				person.living_space = True
 
-		if not self.allocate(person,room_name):
-			Util.print_two_line('Unable to allocate ' + person.name())
+			if room[0].allocate(person):
+				if room[0].room_type == 'OFFICE':
+					self.allocate(person)
+				Util.print_line(person.name() + ' has been allocated to ' + room[0].name)
+			else:
+				Util.print_line('Unable to allocate ' + person.name())
+		else:
+			Util.print_line(room_name + ' not found')
 
 		self.save_state_to_pickle()
 
@@ -409,27 +424,17 @@ class Amity(FileMan):
 				return person
 		return False
 
+
 	def remove_person_from_room(self, person,room_type):
 		"""remove person from a room"""
-		available_rooms = []
-		for room_name in person.assigned_room.values():
-			room = self.get_unallocated_room_by_name(room_name)
-			if room:
-				available_rooms.append(room[0])
 
-		if available_rooms:
-			for room in available_rooms:
-				if room.room_type != room_type:
-					continue
+		room_name = person.assigned_room[room_type]
+		room = self.get_room_by_name(room_name)
+		if room:
+			if room[0].remove_person(person):
+				self.exception_room = room[0]
+				return room[0]
 
-				#check if the user exists in the room and remove it
-			  	for index,room_person in enumerate(room.people):
-			  		if room_person.name() == person.name():
-			  			room.people.pop(index)
-			  			self.exception_room = room
-			  			print person.name() + ' has been removed from ' +room.name
-			  			return room
-		
 		return False
 
 	def load_people(self, args):
@@ -522,7 +527,7 @@ class Amity(FileMan):
 				people = db.execute('SELECT * FROM person WHERE assigned_room LIKE "%'+ room.name +'%"')
 				for item in people:
 					person = self.get_person(item)
-					room.allocate(person)
+					room.allocate(person,False)
 			self.rooms.append(room)
 		return True
 

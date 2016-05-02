@@ -17,10 +17,10 @@ class Room(Db,FileMan):
 		self.people = []
 		self.is_filled = False
 
-	def allocate(self, person):
+	def allocate(self, person, validate_allocation=True):
 		"""allocates person to a room."""
 
-		if not self.allocate_able(person):
+		if not self.allocate_able(person) and validate_allocation:
 			self.error_message = person.name() + ' cannot be allocated to ' + self.name
 			return False
 
@@ -30,10 +30,25 @@ class Room(Db,FileMan):
 		if self.is_filled == True:
 			self.error_message = self.name + ' is occupied'
 			return False
-			
+
 		self.people.append(person)
 		person.allocate(self)
 		return True
+
+	def remove_person(self, person):
+		for index,old_person in enumerate(self.people):
+			if old_person.name() == person.name():
+				self.people.pop(index)
+				del person.assigned_room[self.room_type]
+				if self.room_type == 'LIVINGSPACE':
+					person.living_space = False
+				
+				if not person.assigned_room:
+					person.is_allocated = False
+				
+				return True
+
+		return False
 
 	def people_list_with_room_name(self, output=True):
 		"""build data of room details and the people allocated to it.
@@ -53,15 +68,17 @@ class Room(Db,FileMan):
 
 	def allocate_able(self, person):
 		"""checks if person can be allocated."""
-		if self.people:
-			for old_person in self.people:
-				if old_person.name() == person.name():
-					return False
+
+		if self.room_type in person.assigned_room.keys():
+			return False
+
+		if self.name in person.assigned_room:
+			return False
 
 		if(person.is_staff() and self.room_type == 'LIVINGSPACE'):
 			return False
 
-		if not person.living_space and person.is_fellow():
+		if not person.living_space and person.is_fellow() and self.room_type == 'LIVINGSPACE':
 			return False
 		
 		return True
