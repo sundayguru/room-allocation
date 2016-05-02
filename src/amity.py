@@ -158,11 +158,11 @@ class Amity(FileMan):
 		Util.print_two_line('S/N -> ID -> Firstname -> Lastname -> Type -> Living Space -> Allocated -> datetime')
 		for index,person in enumerate(self.people):
 			if args['-u']:
-				if len(person.assigned_room) != 0:
+				if person.is_allocated:
 					continue
 
 			if args['-a']:
-				if len(person.assigned_room) == 0:
+				if not person.is_allocated:
 					continue
 
 			print (index + 1),person.uid,person.full_details()
@@ -257,7 +257,7 @@ class Amity(FileMan):
 			self.send_people_allocations_to_file(args['<file_name>'],False)
 		else:
 			for person in self.people:
-				if len(person.assigned_room) == 0:
+				if not person.is_allocated:
 					counter += 1
 					Util.print_line(person.full_details())
 
@@ -280,9 +280,9 @@ class Amity(FileMan):
 
 		records = ''
 		for room in self.rooms:
-			if len(room.people) != 0 and allocated:
+			if room.people and allocated:
 				records += room.people_list_with_room_name(False) + '\n'
-			elif not allocated and len(room.people) == 0:
+			elif not allocated and not room.people:
 				records += room.nameplate() + '\n'
 
 		self.set_file_location(file_name)
@@ -294,9 +294,9 @@ class Amity(FileMan):
 
 		records = ''
 		for person in self.people:
-			if len(person.assigned_room) != 0 and allocated:
+			if person.is_allocated and allocated:
 				records += person.full_details() + '\n'
-			elif not allocated and len(person.assigned_room) == 0:
+			elif not allocated and not person.is_allocated:
 				records += person.full_details() + '\n'
 
 		self.set_file_location(file_name)
