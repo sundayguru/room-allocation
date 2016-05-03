@@ -76,6 +76,8 @@ class TestFileMan(unittest.TestCase):
 		f.pickle_dump({'a':'value 1','b':'value 2'})
 		r = f.pickle_load()
 		self.assertEqual(r['a'],'value 1')
+		f.file_location = 'unknown'
+		self.assertEqual(f.pickle_load(),False)
 
 if __name__ == '__main__':
     unittest.main()
