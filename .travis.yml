@@ -3,17 +3,15 @@ python:
   - "2.7"
 # command to install dependencies
 install:
-  - "pip install --upgrade pip"
-  - "pip install python-coveralls"
-  - "pip install coveralls"
-  - "pip install coverage"
-  #- "pip install codeclimate-test-reporter"
-  #- "pip install -r requirements.txt"
-
-# command to run tests
+  - pip install -e . --use-mirrors
+before_script:
+  - pip install -r test_requirements.txt --use-mirrors
+  - git clone https://github.com/z4r/python-coveralls-example.git
+  - cd python-coveralls-example
+  - git checkout -qf 17b8119796516195527dcb4f454a2ebd41d60244
+  - py.test example/tests.py --cov=example
+  - cd -
 script:
-  - nosetests --with-coverage
-  #- coverage run test.py
-after-success:
+  - py.test coveralls/tests.py --doctest-modules --pep8 coveralls -v --cov coveralls --cov-report term-missing
+after_success:
   - coveralls
-  #- codeclimate-test-reporter token = 78c1158ace8961fda85230cf32b5519c4c64d54e89b5541f6be72b48c6e01743
