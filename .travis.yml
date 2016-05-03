@@ -12,6 +12,6 @@ before_script:
   - py.test example/tests.py --cov=example
   - cd -
 script:
-  - py.test test.py --doctest-modules --pep8 coveralls -v --cov coveralls --cov-report term-missing
+  - coverage run test.py
 after_success:
   - coveralls
