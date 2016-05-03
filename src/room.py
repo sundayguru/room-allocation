@@ -69,11 +69,9 @@ class Room(Db,FileMan):
 	def allocate_able(self, person):
 		"""checks if person can be allocated."""
 
-		if self.room_type in person.assigned_room.keys():
+		if self.room_type in person.assigned_room.keys() or self.name in person.assigned_room.values():
 			return False
 
-		if self.name in person.assigned_room:
-			return False
 
 		if(person.is_staff() and self.room_type == 'LIVINGSPACE'):
 			return False

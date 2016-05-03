@@ -16,7 +16,7 @@ p7
 I01
 sS'uid'
 p8
-S'OS68'
+S'OS65'
 p9
 sS'firstname'
 p10
@@ -51,7 +51,7 @@ Rp23
 g7
 I00
 sg8
-S'DW70'
+S'DW37'
 p25
 sg10
 S'DOMINIC'

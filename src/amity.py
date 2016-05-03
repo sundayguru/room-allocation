@@ -62,10 +62,10 @@ class Amity(FileMan):
 
 		if room_name:
 			selected_room = self.select_room_by_name(room_name)
-			if selected_room.room_type != self.exception_room.room_type or selected_room.name == self.exception_room.name:
-				Util.print_line(person.name() + ' cannot be allocated to ' + selected_room.name)
-				return False
-			print selected_room.name
+			if self.exception_room:
+				if selected_room.room_type != self.exception_room.room_type or selected_room.name == self.exception_room.name:
+					Util.print_line(person.name() + ' cannot be allocated to ' + selected_room.name)
+					return False
 		else:
 			room_type = "office" if person.is_staff() else room_type
 			selected_room = self.select_random_room(room_type)
@@ -79,6 +79,7 @@ class Amity(FileMan):
 			return True
 		else:
 			Util.print_line('Unable to allocate '+ person.name() + ' to '+ selected_room.name)
+			return False
 
 	def select_room_by_name(self,room_name):
 		available_rooms = self.get_unallocated_room_by_name(room_name)

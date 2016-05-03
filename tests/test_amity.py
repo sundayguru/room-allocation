@@ -98,6 +98,31 @@ class TestAmity(unittest.TestCase):
 		}
 		amity.run_command(args)
 		self.assertEqual(len(amity.people), 2)
+	
+	def test_7_amity_allocate_returns_false_for_empty_room(self):
+		amity = Amity('list_people')
+		amity.rooms = []
+		person = Fellow('Sunday','nwuguru',True)
+		self.assertEqual(amity.allocate(person), False)
+	
+	def test_8_amity_allocate_returns_false_when_allocating_to_same_room(self):
+		amity = self.create_room()
+		amity.exception_room = amity.rooms[0]
+		person = Fellow('Sunday','nwuguru',True)
+		self.assertEqual(amity.allocate(person,'testRoom 1'), False)
+		#self.assertEqual(amity.allocate(person,'testRoom 5'), False)
+
+	def test_9_amity_allocate_returns_false_when_allocating_to_invalid_room_name(self):
+		amity = self.create_room()
+		person = Fellow('Sunday','nwuguru',True)
+		self.assertEqual(amity.allocate(person,'testRoom 5'), False)
+
+	def test_10_amity_allocate_returns_false_when_room_allocation_fails(self):
+		amity = self.create_room()
+		person = Fellow('Sunday','nwuguru',True)
+		room = amity.rooms[0]
+		room.capacity = 0
+		self.assertEqual(amity.allocate(person,room.name), False)
 
 if __name__ == '__main__':
     unittest.main()
