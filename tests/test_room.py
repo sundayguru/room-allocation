@@ -32,7 +32,7 @@ class TestRoom(unittest.TestCase):
 	def test_room_allocate_fails_when_is_filled(self):
 		room = Office('Iroko')
 		person = Staff('Anthiny','Nandaa')
-		room.is_filled = True
+		room.capacity = 0
 		self.assertEqual(room.allocate(person),False)
 
 
@@ -41,6 +41,29 @@ class TestRoom(unittest.TestCase):
 		room.set_file_location('room_test.pkl')
 		room.pickle_dump({'name':'iroko'})
 		self.assertEqual(room.pickle_load()['name'],'iroko')
+
+	def test_room_remove_person(self):
+		room = Office('Iroko')
+		person = Staff('Anthiny','Nandaa')
+		room.allocate(person)
+		self.assertNotEqual(room.people,[])
+		room.remove_person(person)
+		self.assertEqual(room.people,[])
+		self.assertEqual(room.remove_person(person),False)
+
+
+	def test_room_people_list_with_room_name(self):
+		room = Office('Iroko')
+		person = Staff('Anthiny','Nandaa')
+		room.allocate(person)
+		data = room.people_list_with_room_name(False)
+		self.assertNotEqual(data,[])
+
+	def test_room_allocate_able(self):
+		room = Office('Iroko')
+		person = Staff('Anthiny','Nandaa')
+		room.allocate(person)
+		self.assertEqual(room.allocate_able(person),False)
 
 
 	"""Edge cases for init method"""

@@ -3,17 +3,13 @@ python:
   - "2.7"
 # command to install dependencies
 install:
-  - "pip install --upgrade pip"
-  #- "pip install python-coveralls"
-  - "pip install coveralls"
-  - "pip install coverage"
-  - "pip install codeclimate-test-reporter"
-  #- "pip install -r requirements.txt"
-
-# command to run tests
+  - pip install python-coveralls
+before_script:
+  - pip install python-coveralls
+  - pip install coveralls
+  - pip install coverage
 script:
-  # - nosetests --with-coverage
-  - coverage run test.py
-after-success:
-  #- coveralls
-  - codeclimate-test-reporter token = 78c1158ace8961fda85230cf32b5519c4c64d54e89b5541f6be72b48c6e01743
+  - nosetests --with-coverage
+  #- coverage run test.py
+after_success:
+  - coveralls
