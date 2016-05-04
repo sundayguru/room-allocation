@@ -4,13 +4,15 @@ from os import sys, path
 sys.path.append(path.dirname(path.dirname(path.abspath(__file__))))
 from src.db import Db
 from src.migration import Migration
-migrate = Migration('amity_test')
-migrate.install()
+
 
 class TestDb(unittest.TestCase):
 	"""Test cases for Db class"""
 
 	def setUp(self):
+		migrate = Migration('amity_test')
+		migrate.drop()
+		migrate.install()
 		self.db = Db('amity_test')
 		self.data = {
 		'firstname':'sunday',

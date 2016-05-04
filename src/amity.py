@@ -277,6 +277,7 @@ class Amity(FileMan):
 			room[0].people_list_with_room_name()
 		else:
 			Util.print_line(args['<name_of_room>'] + ' room not found')
+			return False
 
 	def send_room_allocations_to_file(self, file_name, allocated=True):
 		"""exports room allocations to specified file name"""
@@ -558,8 +559,6 @@ class Amity(FileMan):
 				values = key_value_pairs[i + 1].split(',')
 				for index in xrange(len(keys)):
 					person.assigned_room[str(keys[index])] = str(values[index])
-
-		#person.assigned_room = row['assigned_room']
 
 		person.date_time = row['date_time']
 		return person

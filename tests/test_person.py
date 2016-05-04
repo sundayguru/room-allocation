@@ -21,6 +21,10 @@ class TestPerson(unittest.TestCase):
 		person.pickle_dump(person.get_details_dict())
 		self.assertEqual(person.pickle_load()['firstname'],person.get_details_dict()['firstname'])
 
+	def test_person_get_state_dict(self):
+		person = Person('sunday','nwuguru',True)
+		self.assertEqual(person.get_state_dict(3),'NO')
+
 	"""Edge cases for init method"""
 	def test_person_init_accept_only_string_for_name_and_type(self):
 		self.assertRaises(ValueError, Person, 'Nandaa', 'Anthony','True')
