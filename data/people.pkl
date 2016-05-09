@@ -16,7 +16,7 @@ p7
 I01
 sS'uid'
 p8
-S'OS87'
+S'OS20'
 p9
 sS'firstname'
 p10
@@ -34,7 +34,7 @@ p15
 (dp16
 S'LIVINGSPACE'
 p17
-S'TESTROOM 3'
+S'TESTROOM 1'
 p18
 sS'OFFICE'
 p19
@@ -51,7 +51,7 @@ Rp23
 g7
 I00
 sg8
-S'DW32'
+S'DW27'
 p25
 sg10
 S'DOMINIC'

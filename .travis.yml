@@ -3,13 +3,8 @@ python:
   - "2.7"
 # command to install dependencies
 install:
-  - pip install python-coveralls
-before_script:
-  - pip install python-coveralls
-  - pip install coveralls
-  - pip install coverage
+  - pip install -r requirements.txt
 script:
   - nosetests --with-coverage
-  #- coverage run test.py
 after_success:
   - coveralls
