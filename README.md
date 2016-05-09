@@ -6,7 +6,8 @@ One stop solution for room allocation management
 ### Badges
 [![Build Status](https://travis-ci.org/andela-snwuguru/room-allocation.svg?branch=master)](https://travis-ci.org/andela-snwuguru/room-allocation)
 
-<a href='https://coveralls.io/github/andela-snwuguru/room-allocation?branch=master'><img src='https://coveralls.io/repos/github/andela-snwuguru/room-allocation/badge.svg?branch=master' alt='Coverage Status' /></a>
+
+[![Coverage Status](https://coveralls.io/repos/github/andela-snwuguru/room-allocation/badge.svg?branch=master)](https://coveralls.io/github/andela-snwuguru/room-allocation?branch=master)
 
 ### Features
 
