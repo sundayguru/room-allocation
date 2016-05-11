@@ -1,9 +1,15 @@
 import os
 import os.path
-
+from tabulate import tabulate
+from src.db import Db
+from src.fileman import FileMan
 
 class Util(object):
 	"""This class contains utility methods."""
+
+	def __init__(self):
+		self.db = Db()
+		self.file_manager = FileMan('')
 
 	@staticmethod
 	def is_file(file_path):
@@ -11,8 +17,8 @@ class Util(object):
 
 	@staticmethod
 	def print_line(message):
-		Util.print_divider()
 		print message
+		Util.print_divider()
 
 	@staticmethod
 	def print_two_line(message):
@@ -38,14 +44,16 @@ class Util(object):
 		print Util.line()
 	
 	@staticmethod
+	def tabulate(data):
+		print tabulate(data, headers="firstrow", tablefmt="pipe")
+	
+	@staticmethod
 	def line():
 		return '---------------------------------------------------------------------------\n'
 	
 	@staticmethod
 	def welcome():
 		Util.print_divider()
-		Util.print_divider()
 		print '                     WELCOME TO ALLOCATION APP                               '
 		print '           One stop solution for room allocation management                  '
-		Util.print_divider()
 		Util.print_divider()

@@ -1,12 +1,12 @@
-from db import Db
-from fileman import FileMan
 from person import Person
 from util import Util
 
 
-class Room(Db,FileMan):
+class Room(object):
 	"""This class manages room entity, it include people attribute that holds the list people allocated to it."""
-
+	
+	table_name = 'room'
+	
 	def __init__(self, name):
 
 		if type(name) != str:
@@ -16,6 +16,7 @@ class Room(Db,FileMan):
 		self.name = name
 		self.people = []
 		self.is_filled = False
+		self.util = Util()
 
 	def allocate(self, person, validate_allocation=True):
 		"""allocates person to a room."""
@@ -62,7 +63,10 @@ class Room(Db,FileMan):
 		
 		data += members[:-2] + '\n'
 		
-		return data if not output else Util.print_line(data)
+		if not output:
+			return data  
+		else:
+			print data
 
 
 
@@ -90,12 +94,13 @@ class Room(Db,FileMan):
 		"""saves rooms details to sqlite db."""
 		
 		data = {
-		'name':self.name,
-		'capacity':self.capacity,
-		'type':self.room_type,
-		'allocated':len(self.people),
+			'name':self.name,
+			'capacity':self.capacity,
+			'type':self.room_type,
+			'allocated':len(self.people),
 		}
-		exists = self.find_by_attr({'name':data['name'],'type':data['type']})
+		self.util.db.table_name = self.table_name
+		exists = self.util.db.find_by_attr({'name':data['name'],'type':data['type']})
 		if exists:
 			return False
-		return self.create(data)
+		return self.util.db.create(data)

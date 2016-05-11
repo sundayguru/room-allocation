@@ -1,7 +1,6 @@
 import os
-from os import path
+import os.path
 import pickle
-from util import Util
 
 
 class FileMan(object):
@@ -10,12 +9,13 @@ class FileMan(object):
 	def __init__(self, file_name):
 		if type(file_name) != str:
 			raise ValueError
-			
+		
+		self.base = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))	
 		self.set_file_location(file_name)
 
 
 	def set_file_location(self, file_name):
-		self.file_location = Util.get_base_path() + '/data/' + file_name
+		self.file_location = self.base + '/data/' + file_name
 
 
 	def read(self):
@@ -61,10 +61,12 @@ class FileMan(object):
 	def validate(self):
 		"""validates the existence of a give file location."""
 
-		if not Util.is_file(self.file_location):
-			#Util.printline('make sure this file is in data folder')
+		if not self.is_file(self.file_location):
 			return False
 		return True
+
+	def is_file(self, file_path):
+		return os.path.isfile(file_path) 
 
 	def pickle_dump(self, data):
 		"""dumps data structure into a file."""
