@@ -36,22 +36,22 @@ class TestAmity(unittest.TestCase):
 		amity.run_command(args)
 		return amity
 
-	def test_0_amity_init_sets_command(self):
+	def test_amity_init_sets_command(self):
 		amity = Amity('list_people')
 		self.assertEqual(amity.command, 'list_people')
 
-	def test_1_amity_create_room(self):
+	def test_amity_create_room(self):
 		amity = self.create_room()
 		self.assertEqual(len(amity.rooms), 3)
 		self.assertEqual(amity.rooms[0].name, 'TESTROOM 1')
 
 		
-	def test_2_amity_add_person(self):
+	def test_amity_add_person(self):
 		amity = self.add_person()
 		self.assertEqual(len(amity.people), 1)
 		self.assertEqual(amity.people[0].name(), 'TEST USER')
 		
-	def test_3_amity_reallocate_person(self):
+	def test_amity_reallocate_person(self):
 		self.create_room()
 		self.add_person()
 		amity = Amity('reallocate_person')
@@ -65,7 +65,7 @@ class TestAmity(unittest.TestCase):
 		amity.run_command(args)
 		self.assertEqual(amity.people[0].assigned_room['LIVINGSPACE'], new_room)
 		
-	def test_4_amity_allocate_person(self):
+	def test_amity_allocate_person(self):
 		self.create_room()
 		self.add_person(False)
 		amity = Amity('allocate_person')
@@ -79,7 +79,7 @@ class TestAmity(unittest.TestCase):
 		self.assertEqual(amity.people[-1].assigned_room['LIVINGSPACE'], 'TESTROOM 1')
 		self.assertEqual(amity.people[-1].is_allocated, True)
 		
-	def test_5_amity_remove_person(self):
+	def test_amity_remove_person(self):
 		self.create_room()
 		self.add_person()
 		amity = Amity('remove_person')
@@ -94,7 +94,7 @@ class TestAmity(unittest.TestCase):
 			old_person = [p for p in room[0].people if p.name() == person.name()]
 		self.assertEqual(old_person, [])
 		
-	def test_6_amity_load_person(self):
+	def test_amity_load_person(self):
 		self.create_room()
 		amity = Amity('load_people')
 		amity.people = []
@@ -104,44 +104,44 @@ class TestAmity(unittest.TestCase):
 		amity.run_command(args)
 		self.assertEqual(len(amity.people), 2)
 	
-	def test_7_amity_allocate_returns_false_for_empty_room(self):
+	def test_amity_allocate_returns_false_for_empty_room(self):
 		amity = Amity('list_people')
 		amity.rooms = []
 		person = Fellow('Sunday','nwuguru',True)
 		self.assertEqual(amity.allocate(person), False)
 	
-	def test_8_amity_allocate_returns_false_when_allocating_to_same_room(self):
+	def test_amity_allocate_returns_false_when_allocating_to_same_room(self):
 		amity = self.create_room()
 		amity.exception_room = amity.rooms[0]
 		person = Fellow('Sunday','nwuguru',True)
 		self.assertEqual(amity.allocate(person,'testRoom 1'), False)
 
-	def test_9_amity_allocate_returns_false_when_allocating_to_invalid_room_name(self):
+	def test_amity_allocate_returns_false_when_allocating_to_invalid_room_name(self):
 		amity = self.create_room()
 		person = Fellow('Sunday','nwuguru',True)
 		self.assertEqual(amity.allocate(person,'testRoom 5'), False)
 
-	def test_10_amity_allocate_returns_false_when_room_allocation_fails(self):
+	def test_amity_allocate_returns_false_when_room_allocation_fails(self):
 		amity = self.create_room()
 		person = Fellow('Sunday','nwuguru',True)
 		room = amity.rooms[0]
 		room.capacity = 0
 		self.assertEqual(amity.allocate(person,room.name), False)
 
-	def test_11_amity_select_random_room(self):
+	def test_amity_select_random_room(self):
 		amity = self.create_room()
 		amity.exception_room = amity.rooms[0]
 		room = amity.select_random_room('livingspace')
 		self.assertEqual(room.name, 'TESTROOM 3')
 		self.assertEqual(amity.select_random_room('unknown'), False)
 
-	def test_12_amity_drop_pickle_files(self):
+	def test_amity_drop_pickle_files(self):
 		amity = self.create_room()
 		self.assertNotEqual(amity.rooms, [])
 		amity.drop_pickle_files()
 		self.assertEqual(amity.rooms, [])
 
-	def test_13_amity_list_people(self):
+	def test_amity_list_people(self):
 		self.create_room()
 		amity = Amity('list_people')
 		amity.people = []
@@ -151,7 +151,7 @@ class TestAmity(unittest.TestCase):
 		self.assertEqual(amity.list_people({'-u':True,'-a':False}), None)
 		self.assertEqual(amity.list_people({'-u':False,'-a':True}), None)
 
-	def test_14_amity_list_rooms(self):
+	def test_amity_list_rooms(self):
 		amity = Amity('list_room')
 		amity.rooms = []
 		self.assertEqual(amity.list_rooms({}), False)
@@ -160,7 +160,7 @@ class TestAmity(unittest.TestCase):
 		self.assertEqual(amity.list_rooms({'-u':False,'-a':True}), None)
 
 
-	def test_15_amity_print_allocations(self):
+	def test_amity_print_allocations(self):
 		amity = Amity('print_allocations')
 		amity.rooms = []
 		self.assertEqual(amity.print_allocations({}), False)
@@ -170,40 +170,40 @@ class TestAmity(unittest.TestCase):
 		self.assertEqual(amity.print_allocations({'-o':True,'<file_name>':'tt.txt'}), None)
 
 
-	def test_16_amity_print_unallocated(self):
+	def test_amity_print_unallocated(self):
 		amity = Amity('print_unallocated')
 		self.assertEqual(amity.print_unallocated({'-r':True,'-o':True,'<file_name>':'tt.txt'}), None)
 		self.assertEqual(amity.print_unallocated({'-r':True,'-o':False,'<file_name>':'tt.txt'}), None)
 		self.assertEqual(amity.print_unallocated({'-r':False,'-o':False,'<file_name>':'tt.txt'}), None)
 		self.assertEqual(amity.print_unallocated({'-r':False,'-o':True,'<file_name>':'tt.txt'}), None)
 
-	def test_17_amity_print_unallocated_room(self):
+	def test_amity_print_unallocated_room(self):
 		amity = self.create_room()
 		self.assertEqual(amity.print_unallocated_room({'-o':True,'<file_name>':'tt.txt'}), None)
 		self.assertEqual(amity.print_unallocated_room({'-o':False,'<file_name>':'tt.txt'}), None)
 		amity.rooms = []
 		self.assertEqual(amity.print_unallocated_room({'-o':False,'<file_name>':'tt.txt'}), False)
 
-	def test_18_amity_print_unallocated_people(self):
+	def test_amity_print_unallocated_people(self):
 		amity = self.create_room()
 		self.assertEqual(amity.print_unallocated_people({'-o':True,'<file_name>':'tt.txt'}), None)
 		self.assertEqual(amity.print_unallocated_people({'-o':False,'<file_name>':'tt.txt'}), None)
 		amity.people = []
 		self.assertEqual(amity.print_unallocated_people({'-o':False,'<file_name>':'tt.txt'}), False)
 
-	def test_19_amity_print_room(self):
+	def test_amity_print_room(self):
 		self.create_room()
 		amity = self.add_person()
 		self.assertEqual(amity.print_room({'<name_of_room>':'testRoom 1'}), None)
 		self.assertEqual(amity.print_room({'<name_of_room>':'unkown'}), False)
 
 	
-	def test_22_amity_save_people_state(self):
+	def test_amity_save_people_state(self):
 		amity = Amity('save_state')
 		amity.people = []
 		self.assertEqual(amity.save_people_state(), False)
 
-	def test_22_amity_load_people_state(self):
+	def test_amity_load_people_state(self):
 		migrate = Migration()
 		migrate.drop()
 		migrate.install()

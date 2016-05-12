@@ -19,8 +19,9 @@ class TestPerson(unittest.TestCase):
 		person = Person('sunday','nwuguru',True)
 		self.assertEqual(person.get_state_dict(3),'NO')
 
-	"""Edge cases for init method"""
 	def test_person_init_accept_only_string_for_name_and_type(self):
+		"""Edge cases for init method"""
+
 		self.assertRaises(ValueError, Person, 'Nandaa', 'Anthony','True')
 
 	def test_person_init_accept_only_boolean_for_living_space(self):
