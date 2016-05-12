@@ -16,7 +16,11 @@ p7
 I01
 sS'uid'
 p8
+<<<<<<< HEAD
 S'OS2'
+=======
+S'OS20'
+>>>>>>> d1f16c7447649d64d259929ee238d3de12218374
 p9
 sS'firstname'
 p10
@@ -87,9 +91,15 @@ sbsbsS'assigned_room'
 p42
 (dp43
 S'LIVINGSPACE'
+<<<<<<< HEAD
 p44
 S'TESTROOM 3'
 p45
+=======
+p17
+S'TESTROOM 1'
+p18
+>>>>>>> d1f16c7447649d64d259929ee238d3de12218374
 sS'OFFICE'
 p46
 S'TESTROOM 2'
@@ -105,8 +115,13 @@ Rp50
 g7
 I00
 sg8
+<<<<<<< HEAD
 S'DW2'
 p52
+=======
+S'DW27'
+p25
+>>>>>>> d1f16c7447649d64d259929ee238d3de12218374
 sg10
 S'DOMINIC'
 p53
