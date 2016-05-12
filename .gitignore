@@ -1,0 +1,8 @@
+*.pyc
+*.db
+src/*.pyc
+data/*.pyc
+data/*.pkl
+data/*.txt
+tests/htmlcov/*
+
