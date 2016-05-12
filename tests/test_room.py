@@ -59,12 +59,14 @@ class TestRoom(unittest.TestCase):
 		self.assertEqual(room.allocate_able(person),False)
 
 
-	"""Edge cases for init method"""
 	def test_room_init_accept_only_string(self):
+		"""Edge cases for init method"""
+
 		self.assertRaises(ValueError, Room, 1)
 
-	"""Edge cases for allocate method"""
 	def test_room_allocate_fails_when_person_living_space_is_false(self):
+		"""Edge cases for allocate method"""
+
 		room = LivingSpace('Iroko')
 		person = Fellow('Sunday','nwuguru')
 		self.assertEqual(room.allocate(person), False)
