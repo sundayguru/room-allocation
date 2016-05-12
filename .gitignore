@@ -4,3 +4,5 @@ src/*.pyc
 data/*.pyc
 data/*.pkl
 data/*.txt
+tests/htmlcov/*
+
