@@ -6,4 +6,4 @@ class LivingSpace(Room):
 	
 	capacity = 4
 	room_type = 'LIVINGSPACE'
-	table_name = 'room'
+	

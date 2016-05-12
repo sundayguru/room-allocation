@@ -1,12 +1,11 @@
-from db import Db
-from fileman import FileMan
 from person import Person
 from util import Util
 
 
-class Room(Db,FileMan):
+class Room(object):
 	"""This class manages room entity, it include people attribute that holds the list people allocated to it."""
-
+	
+	table_name = 'room'
 	def __init__(self, name):
 
 		if type(name) != str:
@@ -16,9 +15,10 @@ class Room(Db,FileMan):
 		self.name = name
 		self.people = []
 		self.is_filled = False
+		self.util = Util()
 
 	def allocate(self, person, validate_allocation=True):
-		"""allocates person to a room."""
+		"""Allocates person to a room."""
 
 		if not self.allocate_able(person) and validate_allocation:
 			self.error_message = person.name() + ' cannot be allocated to ' + self.name
@@ -36,6 +36,8 @@ class Room(Db,FileMan):
 		return True
 
 	def remove_person(self, person):
+		"""Removes person from people list """
+
 		for index,old_person in enumerate(self.people):
 			if old_person.name() == person.name():
 				self.people.pop(index)
@@ -51,8 +53,10 @@ class Room(Db,FileMan):
 		return False
 
 	def people_list_with_room_name(self, output=True):
-		"""build data of room details and the people allocated to it.
-		returns the data or outputs it if output parameter is set to True."""
+		"""
+		Build data of room details and the people allocated to it.
+		Returns the data or outputs it if output parameter is set to True.
+		"""
 
 		data = self.nameplate() + ' ' + str(len(self.people)) + ' of ' + str(self.capacity) +'\n'
 		data += Util.line()
@@ -62,12 +66,15 @@ class Room(Db,FileMan):
 		
 		data += members[:-2] + '\n'
 		
-		return data if not output else Util.print_line(data)
+		if not output:
+			return data  
+		else:
+			print data
 
 
 
 	def allocate_able(self, person):
-		"""checks if person can be allocated."""
+		"""Checks if person can be allocated."""
 
 		if self.room_type in person.assigned_room.keys() or self.name in person.assigned_room.values():
 			return False
@@ -82,20 +89,21 @@ class Room(Db,FileMan):
 		return True
 
 	def nameplate(self):
-		"""returns room name and type as string."""
+		"""Returns room name and type as string."""
 
 		return self.name + ' (' + self.room_type + ')'
 
 	def save(self):
-		"""saves rooms details to sqlite db."""
+		"""Saves rooms details to sqlite db."""
 		
 		data = {
-		'name':self.name,
-		'capacity':self.capacity,
-		'type':self.room_type,
-		'allocated':len(self.people),
+			'name':self.name,
+			'capacity':self.capacity,
+			'type':self.room_type,
+			'allocated':len(self.people),
 		}
-		exists = self.find_by_attr({'name':data['name'],'type':data['type']})
+		self.util.db.table_name = self.table_name
+		exists = self.util.db.find_by_attr({'name':data['name'],'type':data['type']})
 		if exists:
 			return False
-		return self.create(data)
+		return self.util.db.create(data)

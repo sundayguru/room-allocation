@@ -10,10 +10,11 @@ Usage:
   ara print_allocations [(-o <file_name>)]
   ara print_unallocated [(-o <file_name>) -r]
   ara print_room <name_of_room>
-  ara save_state [--db=sqlite_database]
+  ara save_state [--db=sqlite_database -v]
   ara load_state [--db=sqlite_database]
   ara list_people [-u | -a]
   ara list_rooms [-u | -a]
+  ara clear
 
 
 Options:
@@ -24,6 +25,7 @@ Options:
   -a            Allocated
   -o            Output file name
   -l            Living Space
+  -v            Show Logs
 
 """
 from docopt import docopt
@@ -45,6 +47,7 @@ func_map = [
   'list_rooms',
   'allocate_person',
   'remove_person',
+  'clear',
 ]
 
 if __name__ == '__main__':

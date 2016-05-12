@@ -115,7 +115,6 @@ class TestAmity(unittest.TestCase):
 		amity.exception_room = amity.rooms[0]
 		person = Fellow('Sunday','nwuguru',True)
 		self.assertEqual(amity.allocate(person,'testRoom 1'), False)
-		#self.assertEqual(amity.allocate(person,'testRoom 5'), False)
 
 	def test_9_amity_allocate_returns_false_when_allocating_to_invalid_room_name(self):
 		amity = self.create_room()
@@ -198,19 +197,7 @@ class TestAmity(unittest.TestCase):
 		self.assertEqual(amity.print_room({'<name_of_room>':'testRoom 1'}), None)
 		self.assertEqual(amity.print_room({'<name_of_room>':'unkown'}), False)
 
-	def test_20_amity_save_state(self):
-		self.create_room()
-		self.add_person()
-		amity = Amity('save_state')
-		amity.run_command({'--db':False})
-		amity = Amity('save_state')
-		self.assertEqual(amity.rooms, [])
-
-	def test_21_amity_load_state(self):
-		amity = Amity('load_state')
-		amity.run_command({'--db':False})
-		self.assertNotEqual(amity.rooms, [])
-
+	
 	def test_22_amity_save_people_state(self):
 		amity = Amity('save_state')
 		amity.people = []

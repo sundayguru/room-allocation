@@ -15,12 +15,6 @@ class TestPerson(unittest.TestCase):
 		person = Person('sunday','nwuguru',True)
 		self.assertEqual(person.living_space, True)
 
-	def test_person_inherits_fileman(self):
-		person = Person('sunday','nwuguru',True)
-		person.set_file_location('person_test.pkl')
-		person.pickle_dump(person.get_details_dict())
-		self.assertEqual(person.pickle_load()['firstname'],person.get_details_dict()['firstname'])
-
 	def test_person_get_state_dict(self):
 		person = Person('sunday','nwuguru',True)
 		self.assertEqual(person.get_state_dict(3),'NO')

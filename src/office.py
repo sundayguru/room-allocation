@@ -6,4 +6,3 @@ class Office(Room):
 	
 	capacity = 6
 	room_type = 'OFFICE'
-	table_name = 'room'
