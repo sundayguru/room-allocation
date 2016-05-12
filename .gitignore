@@ -1,4 +1,5 @@
 *.pyc
+*.db
 src/*.pyc
 data/*.pyc
 data/*.pkl
