@@ -35,13 +35,6 @@ class TestRoom(unittest.TestCase):
 		room.capacity = 0
 		self.assertEqual(room.allocate(person),False)
 
-
-	def test_room_inherits_fileman(self):
-		room = Room('Iroko')
-		room.set_file_location('room_test.pkl')
-		room.pickle_dump({'name':'iroko'})
-		self.assertEqual(room.pickle_load()['name'],'iroko')
-
 	def test_room_remove_person(self):
 		room = Office('Iroko')
 		person = Staff('Anthiny','Nandaa')

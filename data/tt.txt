@@ -1,1 +1,6 @@
+List of unallocated person
+---------------------------------------------------------------------------
 
+|   S/N | ID   | Firstname   | Lastname   | Type   | Wants Accommodation   | Allocated   | Datetime   |
+|------:|:-----|:------------|:-----------|:-------|:----------------------|:------------|:-----------|
+|     1 | TU2  | TEST        | USER       | FELLOW | YES                   | YES         |            |
