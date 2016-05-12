@@ -115,7 +115,6 @@ class TestAmity(unittest.TestCase):
 		amity.exception_room = amity.rooms[0]
 		person = Fellow('Sunday','nwuguru',True)
 		self.assertEqual(amity.allocate(person,'testRoom 1'), False)
-		#self.assertEqual(amity.allocate(person,'testRoom 5'), False)
 
 	def test_9_amity_allocate_returns_false_when_allocating_to_invalid_room_name(self):
 		amity = self.create_room()

@@ -1,5 +1,3 @@
-from random import randint
-
 from util import Util
 
 
@@ -15,24 +13,34 @@ class Person(object):
 		if type(firstname) != str or type(lastname) != str or type(living_space) != bool:
 			raise ValueError
 
+		self.util = Util()
 		self.firstname = firstname
 		self.lastname = lastname
 		self.living_space = living_space
 		self.assigned_room = {}
 		self.is_allocated = False
-		self.uid = firstname[0:1] + lastname[0:1] + str(randint(0,9)) + str(randint(0,9))
-		self.util = Util()
+		self.uid = firstname[0:1] + lastname[0:1] + str(self.get_next_id())
 
+
+	def get_next_id(self):
+		"""
+		This method will return incremental value for person id
+		"""
+ 
+		self.util.file_manager.set_file_location('people.pkl')
+		people = self.util.file_manager.pickle_load()
+		return len(people) + 1 if people else 1
 
 	def full_details(self):
-		"""returns person full details as string."""
+		"""Returns person full details as string."""
 
 		details = self.name() + ' ' + self.person_type + ' ' + self.get_state_dict(self.living_space) 
 		details += ' ' + self.get_state_dict(self.is_allocated) + ' ' + self.date_time
 		return details
 
 	def details_list(self):
-		"""returns person full details as list."""
+		"""Returns person full details as list."""
+		
 		return [
 			self.uid,
 			self.firstname,
@@ -45,7 +53,7 @@ class Person(object):
 
 
 	def get_details_dict(self):
-		"""returns person full details as dictionary."""
+		"""Returns person full details as dictionary."""
 
 		return {
 			'firstname':self.firstname,
@@ -63,7 +71,7 @@ class Person(object):
 		return keys + '=' + values
 
 	def get_state_dict(self, state):
-		"""returns corresponding value in state_dict."""
+		"""Returns corresponding value in state_dict."""
 
 		try:
 			return self.state_dict[state]
@@ -71,7 +79,7 @@ class Person(object):
 			return self.state_dict[0]
 
 	def transalate(self, status):
-		"""this simply converts bool to int (0 or 1)."""
+		"""This simply converts bool to int (0 or 1)."""
 
 		if status:
 			return 1
@@ -79,9 +87,13 @@ class Person(object):
 			return 0
 
 	def name(self):
-		"""returns full name of the person."""
+		"""Returns full name of the person."""
 
 		return self.firstname + ' ' + self.lastname
+
+	@staticmethod
+	def headers():
+		return ['S/N','ID','Firstname','Lastname','Type','Wants Accommodation','Allocated','Datetime']
 
 	def allocate(self, room, allocated=True):
 		self.is_allocated = allocated

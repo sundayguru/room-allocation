@@ -45,7 +45,11 @@ class Util(object):
 	
 	@staticmethod
 	def tabulate(data):
-		print tabulate(data, headers="firstrow", tablefmt="pipe")
+		print Util.get_table(data)
+	
+	@staticmethod
+	def get_table(data):
+		return tabulate(data, headers="firstrow", tablefmt="pipe")
 	
 	@staticmethod
 	def line():
